@@ -1,15 +1,100 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  ENGINEER
+  PM
+}
+
+enum AppStatus {s
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+//stores both PMs and Engineers
 model User {
   id Int @id @default(autoincrement())
+  firebaseUid String @unique
   name String
   email String @unique
+  role Role
+  engineerSkills EngineerSkill[]
+  ownedProjects Project[] @relation("ProjectsOwned")
+  assignedProjects ProjectAssignment[]
+  applications Application[]
+  createdAt DateTime @default(now())
+}
+
+//list of skills - scalable
+model Skill {
+  id Int @id @default(autoincrement())
+  name String @unique
+  engineers EngineerSkill[]
+  projectRequirements ProjectSkill[]
+}
+
+//link users to skills
+model EngineerSkill {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  skill Skill @relation(fields: [skillId], references: [id])
+  skillId Int
+  proficiency Int
+}
+
+//created by PMs
+model Project {
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  durationWeeks Int
+  startDate DateTime?
+  owner User @relation("ProjectsOwned", fields: [ownerId], references: [id])
+  ownerId Int
+  requiredSkills ProjectSkill[]
+  assignments ProjectAssignment[]
+  applications Application[]
+  createdAt DateTime @default(now())
+}
+
+//skill requirements for a project
+model ProjectSkill {
+  id Int @id @default(autoincrement())
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  skill Skill @relation(fields: [skillId], references: [id])
+  skillId Int
+  minLevel Int
+}
+
+//tracks what engineer is assigned where
+model ProjectAssignment {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  startDate DateTime
+  endDate DateTime
+}
+
+//engineers showing interest
+model Application {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  matchScore Float?
+  status AppStatus @default(PENDING)
+  appliedAt DateTime @default(now())
 }

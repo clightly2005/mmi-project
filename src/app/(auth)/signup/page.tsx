@@ -9,22 +9,33 @@ export default function SignUpPage() {
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState<string | null>(null);
 
-    async function handleSubmit(e: React.FormEvent){
-        e.preventDefault();
-        setMsg(null);
-        try{
-            await createUserWithEmailAndPassword(auth, email, password);
-            setMsg("Account created! you can now log in.");
-        } catch (err:any){
-            setMsg(err?.message ?? "Sign up failed.")
-        }
+    async function handleSubmit(e: React.FormEvent) {
+      e.preventDefault();
+      setMsg(null);
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        //proving identity so user cant fake a token (cryptographically signed by firebase)
+        const token = await user.getIdToken();
+
+        //sends token 
+        await fetch("/api/users", {
+          method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+          body: JSON.stringify({ uid: user.uid, email: user.email,}),
+        });
+        setMsg("Account created!");
+      } 
+      catch (err: any) {
+        setMsg(err?.message ?? "Sign up failed.");
       }
+    }
     
     return (
         <div className="flex  min-h-full flex-col justify-center py-12 sm:px-6 lg:px-20">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img alt="Skill sync" src="logo.png" className="mx-auto h-20 w-auto not-dark:hidden"/>
-          <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-sky-400">SkillSync</h1>
+          <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-sky-400">Matchitect</h1>
           <h2 className="mt-6 text-center text-xl font-bold tracking-tight hero">
             Create your account
           </h2>
@@ -35,7 +46,7 @@ export default function SignUpPage() {
             <form onSubmit={handleSubmit} className="py-4 space-y-3">
               <div>
                 <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 dark:text-blue-950">
-                  Email address
+                  Please enter your Email address
                 </label>
                 <div className="mt-2">
                   <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} 
@@ -45,7 +56,7 @@ export default function SignUpPage() {
 
               <div>
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900 dark:text-blue-950">
-                  Password
+                  Please create a Password
                 </label>
                 <div className="mt-2">
                   <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}
@@ -56,7 +67,7 @@ export default function SignUpPage() {
               <div>
                 <button type="submit"
                   className="flex w-full justify-center rounded-md mt-8 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs dark:bg-sky-500 dark:shadow-sm dark:hover:bg-sky-600 dark:focus-visible:outline-sky-800">
-                  Sign in
+                  Sign up
                 </button>
                 {msg && <p className="text-red-400">{msg}</p>}
               </div>

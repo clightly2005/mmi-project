@@ -1,29 +1,20 @@
 import ProjectRow, { type ProjectRowProps } from "../../components/ProjectRow";
+import { PrismaClient } from '@prisma/client';
 
-const demo: ProjectRowProps[] = [
-  {
-    id: 1,
-    title: "Automation Script",
-    description: "Fix vCenter automation for license certificates.",
-    requiredSkills: [
-      { name: "Python", minProf: "Intermediate" },
-      { name: "SQL", minProf: "Intermediate" },
-    ],
-    durationLabel: "1 week",
-  },
-  {
-    id: 2,
-    title: "Infra-as-Code Pipeline",
-    description: "Build a CDK pipeline and database for the analytics team.",
-    requiredSkills: [
-      { name: "TypeScript", minProf: "Beginner" },
-      { name: "AWS CDK", minProf: "Beginner" },
-    ],
-    durationLabel: "1 month",
-  },
-];
+const prisma = new PrismaClient();
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+
+  //get projects from db
+  const projects =  await prisma.project.findMany({
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+    },
+  })
+
   return (
     <div className="max-w-6xl mx-auto p-8 space-y-6">
       <h1 className="text-3xl font-bold hero mb-2">All Projects</h1>
@@ -41,7 +32,15 @@ export default function ProjectsPage() {
 
       {/* LIST */}
       <div className="space-y-4">
-        {demo.map(p => <ProjectRow key={p.id} {...p} />)}
+        {projects.map((project: any) => (
+          <ProjectRow
+          key={project.id}
+          id={project.id}
+          title={project.title}
+          description={project.description}
+          requiredSkills={[]} 
+        />
+        ))}
       </div>
     </div>
   );

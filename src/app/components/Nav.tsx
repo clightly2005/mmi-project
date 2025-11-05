@@ -21,7 +21,7 @@ export default function Navbar() {
             
     <nav className=" shadow-md ">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-        <h1 className="text-xl font-extrabold text-sky-400 tracking-wide">X</h1>
+        <h1 className="text-xl font-extrabold text-sky-400 tracking-wide">Matchitect</h1>
 
         <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-gray-700 rounded "
             aria-label="Toggle menu" >
