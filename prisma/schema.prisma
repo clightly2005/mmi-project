@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,14 +14,13 @@ model application {
   matchScore Float?
   status     applicationStatus @default(PENDING)
   appliedAt  DateTime           @default(now())
-  project    project            @relation(fields: [projectId], references: [id], map: "Application_projectId_fkey")
-  user       user               @relation(fields: [userId], references: [id], map: "Application_userId_fkey")
 
-  @@index([projectId], map: "Application_projectId_fkey")
-  @@index([userId], map: "Application_userId_fkey")
+  project    project            @relation(fields: [projectId], references: [id])
+  user       user               @relation(fields: [userId], references: [id])
+
+  @@index([projectId])
+  @@index([userId])
 }
-
-
 
 enum ProficiencyLevel {
   BEGINNER
@@ -36,11 +35,12 @@ model engineerSkill {
   userId      Int
   skillId     Int
   proficiency ProficiencyLevel
-  skill       skill @relation(fields: [skillId], references: [id], map: "EngineerSkill_skillId_fkey")
-  user        user  @relation(fields: [userId], references: [id], map: "EngineerSkill_userId_fkey")
 
-  @@index([skillId], map: "engineerSkill_skillId_fkey")
-  @@index([userId], map: "engineerSkill_userId_fkey")
+  skill       skill @relation(fields: [skillId], references: [id])
+  user        user  @relation(fields: [userId], references: [id])
+
+  @@index([skillId])
+  @@index([userId])
 }
 
 model project {
@@ -51,12 +51,13 @@ model project {
   startDate         DateTime?
   ownerId           Int
   createdAt         DateTime            @default(now())
+
   application       application[]
-  user              user                @relation(fields: [ownerId], references: [id], map: "Project_ownerId_fkey")
+  user              user                @relation(fields: [ownerId], references: [id])
   projectAssignment projectAssignment[]
   projectSkill      projectSkill[]
 
-  @@index([ownerId], map: "Project_ownerId_fkey")
+  @@index([ownerId])
 }
 
 model projectAssignment {
@@ -65,11 +66,12 @@ model projectAssignment {
   projectId Int
   startDate DateTime
   endDate   DateTime
-  project   project  @relation(fields: [projectId], references: [id], map: "ProjectAssignment_projectId_fkey")
-  user      user     @relation(fields: [userId], references: [id], map: "ProjectAssignment_userId_fkey")
 
-  @@index([projectId], map: "ProjectAssignment_projectId_fkey")
-  @@index([userId], map: "ProjectAssignment_userId_fkey")
+  project   project  @relation(fields: [projectId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
+
+  @@index([projectId])
+  @@index([userId])
 }
 
 model projectSkill {
@@ -77,16 +79,17 @@ model projectSkill {
   projectId Int
   skillId   Int
   minLevel  Int
-  project   project @relation(fields: [projectId], references: [id], map: "ProjectSkill_projectId_fkey")
-  skill     skill   @relation(fields: [skillId], references: [id], map: "ProjectSkill_skillId_fkey")
 
-  @@index([projectId], map: "ProjectSkill_projectId_fkey")
-  @@index([skillId], map: "ProjectSkill_skillId_fkey")
+  project   project @relation(fields: [projectId], references: [id])
+  skill     skill   @relation(fields: [skillId], references: [id])
+
+  @@index([projectId])
+  @@index([skillId])
 }
 
 model skill {
   id            Int             @id @default(autoincrement())
-  name          String          @unique(map: "Skill_name_key")
+  name          String          @unique
   engineerSkill engineerSkill[]
   projectSkill  projectSkill[]
 }
@@ -94,18 +97,20 @@ model skill {
 model user {
   id                Int                 @id @default(autoincrement())
   name              String
-  email             String              @unique(map: "User_email_key")
+  email             String              @unique
   createdAt         DateTime            @default(now())
   role              userRole
-  firebaseUid       String              @unique(map: "User_firebaseUid_key")
+  firebaseUid       String              @unique
+
   engineerRoleId    Int?
   engineerRole      engineerRole?       @relation(fields: [engineerRoleId], references: [id])
+
   application       application[]
   engineerSkill     engineerSkill[]
   project           project[]
   projectAssignment projectAssignment[]
 
-  @@index([engineerRoleId], map: "User_engineerRoleId_fkey")
+  @@index([engineerRoleId])
 }
 
 enum applicationStatus {
@@ -122,5 +127,5 @@ enum userRole {
 model engineerRole {
   id    Int    @id @default(autoincrement())
   name  String @unique
-  users user[]   
+  users user[]
 }

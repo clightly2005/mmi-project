@@ -28,7 +28,7 @@ export function useAvailability(userId?: number){
 
                 setTime(weeks === 0 ? "Available now" : `Available in ${weeks} week${weeks === 1 ? "" : "s" }`);
             }
-            catch(error: any){
+            catch(error: unknown){
                 console.error("Error fetching assignments:", error.message);
                 setTime("Unknown");
             }
