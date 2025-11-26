@@ -57,7 +57,7 @@ export async function GET(req: Request){
         where: { firebaseUid: decoded.uid, },
         include: {
             engineerRole: true,
-                engineerskill: {
+                engineerSkill: {
                 include: {
                     skill: true, 
                 },
