@@ -2,7 +2,9 @@
 "use client";
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAuth }  from "firebase/auth";
 
+//initalises firebase for client side use
 
 export function getFirebaseApp(): FirebaseApp {
     if(!getApps().length) {;
@@ -18,5 +20,7 @@ export function getFirebaseApp(): FirebaseApp {
     return app;
  }
  return getApp();
-}
+};
+
+export const auth = getAuth(getFirebaseApp());
 

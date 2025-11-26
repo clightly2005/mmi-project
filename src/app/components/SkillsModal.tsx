@@ -1,210 +1,92 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-
-type Role = "Front-end" | "Back-end" | "Full-stack";
-type Duration =
-  | "1 week"
-  | "2 weeks"
-  | "3–4 weeks"
-  | "1–2 months"
-  | "3–4 months";
-type Proficiency = "1 - Novice" | "2 - Beginner" | "3 - Intermediate" | "4 - Advanced" | "5 - Expert";
-
-const SKILLS = ["Python", "TypeScript", "C#", "Java", "Go", "SQL", "React", "Node.js"] as const;
-const ROLES: Role[] = ["Front-end", "Back-end", "Full-stack"];
-const DURATIONS: Duration[] = ["1 week", "2 weeks", "3–4 weeks", "1–2 months", "3–4 months"];
-const PROFICIENCIES: Proficiency[] = [
-  "1 - Novice",
-  "2 - Beginner",
-  "3 - Intermediate",
-  "4 - Advanced",
-  "5 - Expert",
-];
+import SelectField from "../components/SelectFields";
+import { useSkills } from "../hooks/useSkills";
+import { useUser } from "../hooks/useUser";
+import { useEngSkills } from "../hooks/useEngSkills";
+import { useAvailability } from "../hooks/useAvailability";
 
 export default function ProjectModal({ onClose }: { onClose: () => void }) {
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [requirements, setRequirements] = useState("");
-  const [skill, setSkill] = useState<typeof SKILLS[number] | "">("");
-  const [role, setRole] = useState<Role | "">("");
-  const [duration, setDuration] = useState<Duration | "">("");
+
+  //account data - readonly
+  const user = useUser();
+
+  //skill data
+  const skills = useSkills();
+  const [skill, setSkill] = useState<string | number>("");
+  const skillOptions =  skills.map(skill => skill.name);
+  const engSkills = useEngSkills(user?.id ? String(user.id): undefined);
+  const hasEngSkills = !!engSkills?.length;
+
+  //role data - readonly 
+  const roleName = user?.engineerRole?.name ?? "Not assigned";
+
+  //availability data depending on assignment projects
+  const availability = useAvailability(user?.id);
+    
+  //proficiency data for what skill level u have in the selected skill
+  const profOptions = ["Beginner","Novice","Intermediate","Advanced","Expert"] as const;
+  type Proficiency = typeof profOptions[number];
   const [proficiency, setProficiency] = useState<Proficiency | "">("");
 
+  
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-
-    // Minimal validation
-    if (!name || !desc || !skill || !role || !duration || !proficiency) {
-      alert("Please complete all fields.");
-      return;
-    }
-
-    const payload = {
-      name,
-      description: desc,
-      requirements,
-      requiredSkill: skill,
-      roleNeeded: role,
-      estimatedDuration: duration,
-      minProficiency: Number(proficiency[0]), // "4 - Advanced" -> 4
-    };
-
-    console.log("New project:", payload);
-    // TODO: send to API
+    
+    console.log("New Skill");
     onClose();
   }
-
+  function handleRemoveSkill(e: FormEvent){
+    e.preventDefault();
+    console.log("Remove skill");
+  }
+//
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-bmodal bg-opacity-40">
-      <div className="bg-modal rounded-lg p-6 w-full max-w-md shadow-lg">
-        <h2 className="text-xl font-semibold mb-4 text-white">New Project</h2>
-        <p className="text-neutral-200">Please fill in all fields to submit a new project.</p>
-
-        <form className="space-y-4 my-4" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="projectName" className="block text-sm font-medium text-neutral-100">
-              Project Name
-            </label>
-            <input
-              id="projectName"
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter the project title"
-              className="w-full border px-3 py-2 mt-2 rounded bg-white text-neutral-900"
-            />
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  border border-white/10 shadow-2xl backdrop-blur.">
+      <div className="w-full max-w-md overflow-hidden rounded-lg bg-modal shadow-lg">
+        <form onSubmit={handleSubmit} className="max-h-[85vh] overflow-y-auto p-7 pb-28 space-y-5 divider-y divider-white/5">
+          <h2 className="mb-1 text-xl font-semibold text-white">Your Profile</h2>
+          <p className="text-neutral-200">View your current Skill set below and complete the form fields to add a new one. Please note, when you add a new skill it will request approval from your line manager, so ensure you have evidence.</p>
 
           <div>
-            <label htmlFor="projectDesc" className="block text-sm font-medium text-neutral-100">
-              Project Description
-            </label>
-            <textarea
-              id="projectDesc"
-              required
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              placeholder="Outline the project's purpose"
-              className="w-full border px-3 py-2 mt-2 rounded bg-white text-neutral-900"
-              rows={3}
-            />
+            <label htmlFor="profile" className=" block text-sm font-medium text-slate-100">Account Name </label>
+            <input id="profile" type="text" required value={user?.name || ""} readOnly className="mt-2 w-full rounded border bg-white px-3 py-1.5 text-neutral-900" />
           </div>
-
           <div>
-            <label htmlFor="requirements" className="block text-sm font-medium text-neutral-100">
-              Additional Requirements (optional)
-            </label>
-            <input
-              id="requirements"
-              type="text"
-              value={requirements}
-              onChange={(e) => setRequirements(e.target.value)}
-              placeholder="e.g., security clearance, location, tools"
-              className="w-full border px-3 py-2 mt-2 rounded bg-white text-neutral-900"
-            />
+            <label htmlFor="role" className="block text-sm font-medium text-slate-100">Role</label>
+            <input id="roleName" type="text" required value={roleName || ""} readOnly className="w-full mt-2 rounded border bg-white px-3 py-1.5 text-neutral-900"></input>
           </div>
-
-          {/* New dropdowns */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <label htmlFor="skill" className="block text-sm font-medium text-neutral-100">
-                Primary Skill / Language
-              </label>
-              <select
-                id="skill"
-                required
-                value={skill}
-                onChange={(e) => setSkill(e.target.value as typeof SKILLS[number])}
-                className="w-full border px-3 py-2 mt-2 rounded bg-white text-neutral-900"
-              >
-                <option value="" disabled>
-                  Select a skill
-                </option>
-                {SKILLS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+          
+          <label htmlFor="skillSet" className="block text-sm font-medium mt-6 text-slate-100">
+            Skill set: </label>
+            <div className="flex flex-wrap gap-2">{ hasEngSkills ? ( engSkills.map((s) => (
+              <span key={s.id} className="inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-slate-900 shadow-sm">{s.skill.name}
+                <span className="rounded bg-slate-900 text-white px-1.5 py-0.5 text-[10px]"> {s.proficiency} </span></span>
+                )) ) : (
+                  <span className="text-sm text-slate-400 italic">No skills specified</span>)}
             </div>
 
-            <div>
-              <label htmlFor="roleNeeded" className="block text-sm font-medium text-neutral-100">
-                Role Needed
-              </label>
-              <select
-                id="roleNeeded"
-                required
-                value={role}
-                onChange={(e) => setRole(e.target.value as Role)}
-                className="w-full border px-3 py-2 mt-2 rounded bg-white text-neutral-900"
-              >
-                <option value="" disabled>
-                  Select a role
-                </option>
-                {ROLES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-neutral-100">
-                Estimated Duration
-              </label>
-              <select
-                id="duration"
-                required
-                value={duration}
-                onChange={(e) => setDuration(e.target.value as Duration)}
-                className="w-full border px-3 py-2 mt-2 rounded bg-white text-neutral-900"
-              >
-                <option value="" disabled>
-                  Select duration
-                </option>
-                {DURATIONS.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="proficiency" className="block text-sm font-medium text-neutral-100">
-                Minimum Proficiency
-              </label>
-              <select
-                id="proficiency"
-                required
-                value={proficiency}
-                onChange={(e) => setProficiency(e.target.value as Proficiency)}
-                className="w-full border px-3 py-2 mt-2 rounded bg-white text-neutral-900"
-              >
-                <option value="" disabled>
-                  Select level
-                </option>
-                {PROFICIENCIES.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="grid gap-4 md:grid-cols-2 md:gap-5">
+            <SelectField id="skill" label="Add a skill" value={skill} onChange={(v) => setSkill(v)} options={skillOptions} placeholder="Select a skill"/> 
+            <SelectField id="proficiency" label="Proficiency in selected skill" value={proficiency} onChange={(v) => setProficiency(v as Proficiency)} options={profOptions} placeholder="Select level" />
           </div>
-
-          <button type="submit" className="w-full button-primary text-white py-2 rounded hover:bg-green-700">
-            Save
-          </button>
+          <div>
+            <label htmlFor="availability" className=" mt-6 block text-sm font-medium text-slate-100">Your current availability </label>
+            <input id="availability" type="text" required value={availability || ""} readOnly className="w-full mt-2 rounded border bg-white px-3 py-1.5 text-neutral-900"></input>
+          </div>
+          
         </form>
 
-        <button onClick={onClose} className="mt-2 text-sm text-gray-300 hover:text-white">
-          Close
-        </button>
+        <div className="sticky bottom-0 flex gap-2 border-t border-white/10 bg-modal/95 p-4 backdrop-blur">
+          <button type="button" onClick={onClose} className="w-1/2 rounded border px-3 py-2 text-sm text-gray-200 hover:bg-white/5">
+            Close
+          </button>
+          <button form="__implicit" onClick={(e) => (document.querySelector("form") as HTMLFormElement)?.requestSubmit()}
+            className="w-1/2 rounded bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-700">
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

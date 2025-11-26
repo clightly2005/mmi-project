@@ -7,6 +7,7 @@ import { get } from "http";
 const prisma = new PrismaClient();
 const auth = getAuth(adminApp);
 
+//creating users and adding to db
 export async function POST(request: Request){
     console.log("/api/users called");
     try {
@@ -36,10 +37,29 @@ export async function POST(request: Request){
                 role: "ENGINEER",
             },
         });
-        return NextResponse.json({success: true, user});
+        return NextResponse.json(user);
     } 
     catch (error:any) {
         console.log("Error creating user:", error);
         return NextResponse.json({error: "Unauthorised token"});
     }
+}
+
+//get endpoint to find DB user by firebase id
+export async function GET(req: Request){
+    const authHeader = req.headers.get("Authorization");
+    const idToken = authHeader?.split(" ")[1];
+    const decoded = await getAuth(adminApp).verifyIdToken(idToken!);
+    const user = await prisma.user.findUnique({
+        where: { firebaseUid: decoded.uid, },
+        include: {
+            engineerRole: true,
+                engineerskill: {
+                include: {
+                    skill: true, 
+                },
+            },
+        },
+    });
+    return NextResponse.json(user);
 }
