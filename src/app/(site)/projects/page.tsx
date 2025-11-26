@@ -32,7 +32,7 @@ export default async function ProjectsPage() {
 
       {/* LIST */}
       <div className="space-y-4">
-        {projects.map((project: any) => (
+        {projects.map((project) => (
           <ProjectRow
           key={project.id}
           id={project.id}
