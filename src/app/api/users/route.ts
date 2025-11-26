@@ -1,68 +1,105 @@
+// src/app/api/users/route.ts
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
-import { adminApp } from "../../lib/firebaseAdmin";
-import { get } from "http";
+import { getAdminApp } from "../../lib/firebaseAdmin";
 
 const prisma = new PrismaClient();
-const auth = getAuth(adminApp);
 
-//creating users and adding to db
-export async function POST(request: Request){
-    console.log("/api/users called");
-    try {
-        //extracts and verifies token
-        const authHeader = request.headers.get("Authorization");
-         console.log("Auth header:", authHeader);
+// POST: create user in DB from Firebase token
+export async function POST(request: NextRequest) {
+  console.log("/api/users called");
 
-        if(!authHeader?.startsWith("Bearer ")){
-            console.log("Missing token");
-            return NextResponse.json({error: "Unauthorised"}, {status: 401});
-        }
-        const idToken = authHeader.split(" ")[1];
-        const decoded = await auth.verifyIdToken(idToken);
-         console.log("Firebase token decoded");
-        const {uid, email} = decoded;
+  try {
+    const adminApp = getAdminApp();
 
-        //ask firebase if token is real
-        if (!uid ||!email) {
-            return NextResponse.json({error: "Invalid token"}, {status: 400});
-        }
-        //insert user into db
-        const user = await prisma.user.create({
-            data: {
-                firebaseUid: uid,
-                email: email!,
-                name: email!.split("@")[0],
-                role: "ENGINEER",
-            },
-        });
-        return NextResponse.json(user);
-    } 
-    catch (err: unknown){
-        if (err instanceof Error){
-            return NextResponse.json({err: err.message},);
-        }else{
-            return NextResponse.json({err: "An unknown error occurred."});
-        }     
+    if (!adminApp) {
+      console.error("Firebase Admin not configured (no service account)");
+      return NextResponse.json(
+        { error: "Server auth not configured" },
+        { status: 500 }
+      );
     }
+
+    const auth = getAuth(adminApp);
+
+    // extract and verify token
+    const authHeader = request.headers.get("Authorization");
+    console.log("Auth header:", authHeader);
+
+    if (!authHeader?.startsWith("Bearer ")) {
+      console.log("Missing token");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const idToken = authHeader.split(" ")[1];
+    const decoded = await auth.verifyIdToken(idToken);
+    console.log("Firebase token decoded");
+
+    const { uid, email } = decoded;
+
+    if (!uid || !email) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 400 });
+    }
+
+    // insert user into db
+    const user = await prisma.user.create({
+      data: {
+        firebaseUid: uid,
+        email,
+        name: email.split("@")[0],
+        role: "ENGINEER",
+      },
+    });
+
+    return NextResponse.json(user);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("POST /api/users error:", err.message);
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+
+    console.error("POST /api/users unknown error:", err);
+    return NextResponse.json(
+      { error: "An unknown error occurred." },
+      { status: 500 }
+    );
+  }
 }
 
-//get endpoint to find DB user by firebase id
-export async function GET(req: Request){
-    const authHeader = req.headers.get("Authorization");
-    const idToken = authHeader?.split(" ")[1];
-    const decoded = await getAuth(adminApp).verifyIdToken(idToken!);
-    const user = await prisma.user.findUnique({
-        where: { firebaseUid: decoded.uid, },
+// GET: find DB user by firebase id
+export async function GET(req: NextRequest) {
+  const adminApp = getAdminApp();
+
+  if (!adminApp) {
+    console.error("Firebase Admin not configured (no service account)");
+    return NextResponse.json(
+      { error: "Server auth not configured" },
+      { status: 500 }
+    );
+  }
+
+  const auth = getAuth(adminApp);
+
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const idToken = authHeader.split(" ")[1];
+  const decoded = await auth.verifyIdToken(idToken!);
+
+  const user = await prisma.user.findUnique({
+    where: { firebaseUid: decoded.uid },
+    include: {
+      engineerRole: true,
+      engineerSkill: {
         include: {
-            engineerRole: true,
-                engineerSkill: {
-                include: {
-                    skill: true, 
-                },
-            },
+          skill: true,
         },
-    });
-    return NextResponse.json(user);
+      },
+    },
+  });
+
+  return NextResponse.json(user);
 }

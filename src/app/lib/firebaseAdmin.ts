@@ -1,11 +1,43 @@
+
 import { initializeApp, getApps, cert, App } from "firebase-admin/app";
-//this verifies tokens and reads user info so is backend firebase but normal FB SDK is front end as client
+import type { ServiceAccount } from "firebase-admin";
 
-const serviceAccount = JSON.parse(
-    process.env.FIREBASE_SERVICE_ACCOUNT_KEY || "{}"
-    //uses this to contact firebase securely and firebase will confirm if it issues a token or not 
-);
+let adminApp: App | null = null;
 
-export const adminApp: App = getApps().length === 0 ? initializeApp({
-    credential: cert(serviceAccount),
-}) : getApps()[0];
+export function getAdminApp(): App | null {
+  if (adminApp) return adminApp;
+
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+
+  if (!raw) {
+    console.warn(
+      "FIREBASE_SERVICE_ACCOUNT_KEY not set – Firebase Admin disabled in this environment."
+    );
+    return null;
+  }
+
+  let serviceAccount: ServiceAccount;
+
+  try {
+    serviceAccount = JSON.parse(raw) as ServiceAccount;
+  } catch (error) {
+    console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY:", error);
+    return null;
+  }
+
+  if (!serviceAccount.projectId) {
+    console.error(
+      "Service account JSON is missing project id – check Vercel env value."
+    );
+    return null;
+  }
+
+  adminApp =
+    getApps().length === 0
+      ? initializeApp({
+          credential: cert(serviceAccount),
+        })
+      : getApps()[0];
+
+  return adminApp;
+}
