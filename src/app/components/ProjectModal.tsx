@@ -47,7 +47,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
             <input id="project" type="text" required value={user?.name || ""} readOnly className="mt-2 w-full rounded border bg-white px-3 py-1.5 text-neutral-900" />
           </div>
 
-          <p className="text-neutral-200 mb-8">Please fill in all fields below to create a new project. After submission, it will become visible in the Project's page, where it can be assigned to the appropriate engineer.</p>
+          <p className="text-neutral-200 mb-8">Please fill in all fields below to create a new project. After submission, it will become visible in the Projects page, where it can be assigned to the appropriate engineer.</p>
           <div>
             <label htmlFor="project" className="block text-sm font-medium text-slate-100">Project Title</label>
             <input id="title" type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Enter a title" className=" w-full rounded border bg-white px-3 py-1.5 text-neutral-900 my-2" />

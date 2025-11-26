@@ -22,13 +22,13 @@ export default function SelectField({
       <label htmlFor={id} className="block text-sm font-medium text-neutral-100">
         {label}
       </label>
-      <select id={id} value={value as any} onChange={(e) => onChange(isNaN(+e.target.value) ? e.target.value : +e.target.value)}
+      <select id={id} value={value} onChange={(e) => onChange(isNaN(+e.target.value) ? e.target.value : +e.target.value)}
         required className="mt-2 w-full rounded border bg-white px-3 py-2 text-neutral-900">
         <option value="" disabled>
           {placeholder}
         </option>
         {options.map((o) => (
-          <option key={String(o)} value={o as any}>
+          <option key={String(o)} value={String(o)}>
             {String(o)}
           </option>
         ))}

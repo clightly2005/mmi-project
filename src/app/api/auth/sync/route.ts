@@ -47,8 +47,11 @@ export async function POST(req: Request) {
         return NextResponse.json(user);
         
         }
-        catch (error: any) {
-            console.error("Auth sync to DB error: ", error);
-        return NextResponse.json({error: error.message }, {status: 500});
+        catch (err: unknown){
+          if (err instanceof Error){
+            return NextResponse.json({err: err.message},);
+          }else{
+            return NextResponse.json({err: "An unknown error occurred."});
+          }     
         }
 }

@@ -17,8 +17,12 @@ export default function SignInPage() {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.push("/home");
-        } catch (err: any){
-            setMsg(err?.message ?? "Login failed.");
+        } catch (err: unknown){
+          if (err instanceof Error){
+            console.log(err.message);
+          }else{
+            console.log("An unknown error occurred.", err);
+          }     
         }
     }
 

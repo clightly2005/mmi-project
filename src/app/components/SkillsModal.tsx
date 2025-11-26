@@ -34,7 +34,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     
-    }
+    
     console.log("New Skill");
     onClose();
   }
@@ -91,4 +91,5 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
       </div>
     </div>
   );
+
 }

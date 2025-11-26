@@ -39,9 +39,12 @@ export async function POST(request: Request){
         });
         return NextResponse.json(user);
     } 
-    catch (error:any) {
-        console.log("Error creating user:", error);
-        return NextResponse.json({error: "Unauthorised token"});
+    catch (err: unknown){
+        if (err instanceof Error){
+            return NextResponse.json({err: err.message},);
+        }else{
+            return NextResponse.json({err: "An unknown error occurred."});
+        }     
     }
 }
 

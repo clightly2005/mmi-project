@@ -26,8 +26,12 @@ export default function SignUpPage() {
         });
         setMsg("Account created!");
       } 
-      catch (err: any) {
-        setMsg(err?.message ?? "Sign up failed.");
+      catch (err: unknown){
+        if (err instanceof Error){
+          console.log(err.message);
+        }else{
+          console.log("An unknown error occurred.", err);
+        }     
       }
     }
     
