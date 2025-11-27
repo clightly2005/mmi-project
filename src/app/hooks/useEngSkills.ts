@@ -1,19 +1,37 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState, useCallback } from "react";
 import { EngSkill } from "../types/engSkills";
 
-export function useEngSkills(userId?: string) {
-    const [engSkill, setEngSkill] = useState <EngSkill[]>([]);
-       
-    useEffect(() => {
+export type EngineerSkillWithSkill = {
+    id: number;
+    proficiency: string;
+    skill:{ id: number; name: string; };
+};
+
+export function useEngSkills(userId?: number) {
+    const [skills, setSkills] = useState <EngineerSkillWithSkill[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    
+    const refresh = useCallback(async () => {
         if (!userId) return;
-        async function fetchEngSkills(){
+        setLoading(true);
+        setError(null);
+        try{
             const res = await fetch(`/api/engineerSkills?userId=${userId}`, { method: "GET",});
+            if(!res.ok){ throw new Error("Failed to fetch engineer skills");};
             const data = await res.json();
-            setEngSkill(data);
-            console.log(data);
+            setSkills(data);
+        }catch(error){
+            setError("Error fetching engineer skills");
+        }finally{
+            setLoading(false);
         }
-        fetchEngSkills();
-    }, [userId]);
-    return engSkill;
+    }, [userId])
+    useEffect(() => {
+      
+        refresh();
+    },
+    [refresh]);
+    return { skills, loading, error, refresh };
 }

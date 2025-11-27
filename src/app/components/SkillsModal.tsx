@@ -15,8 +15,8 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   //skill data
   const skills = useSkills();
   const [skill, setSkill] = useState<string | number>("");
-  const skillOptions =  skills.map(skill => skill.name);
-  const engSkills = useEngSkills(user?.id ? String(user.id): undefined);
+  const skillOptions =  skills.map((skill) => skill.name);
+  const { skills: engSkills, refresh: refreshEngSkills } = useEngSkills( user?.id );
   const hasEngSkills = !!engSkills?.length;
 
   //role data - readonly 
@@ -31,18 +31,37 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   const [proficiency, setProficiency] = useState<Proficiency | "">("");
 
   
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    
-    
-    console.log("New Skill");
-    onClose();
+    //check if user loaded
+    if (!user?.id) { console.error("No user loaded"); return;}
+    //validate form fields
+    if (!skill || !proficiency) { console.error("Skill or proficiency not selected"); return;}
+
+    //call api route for new engineer skill
+    try {
+      const res = await fetch("/api/engineer-skill", {
+        method: "POST",
+        body: JSON.stringify({
+          userId: user.id,
+          skillName: String(skill),
+          proficiency, 
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        console.error("Failed to save engineer skill: ", data);
+        return;
+      }
+      await refreshEngSkills();
+      onClose();
+    } catch (error) {
+      console.error("Error submitting new skill:", error);
+    }
   }
-  function handleRemoveSkill(e: FormEvent){
-    e.preventDefault();
-    console.log("Remove skill");
-  }
-//
+
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  border border-white/10 shadow-2xl backdrop-blur.">
       <div className="w-full max-w-md overflow-hidden rounded-lg bg-modal shadow-lg">

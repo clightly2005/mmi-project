@@ -41,6 +41,8 @@ model engineerSkill {
 
   @@index([skillId])
   @@index([userId])
+
+  @@unique([userId, skillId])
 }
 
 model project {
