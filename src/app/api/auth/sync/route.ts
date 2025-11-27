@@ -3,36 +3,36 @@ import { PrismaClient } from "@prisma/client";
 import { getAuth } from "firebase-admin/auth";
 import { getAdminApp } from "../../../lib/firebaseAdmin";
 
+//ensures user exists on every page load with their auth etc
+//returns up to date user record from db if skills etc changing
+
 const prisma = new PrismaClient();
 
-// doing the secure part of verifying token as it needs to be server side and syncing to SQL.
-// this is called on every page load to ensure user is in db
 export async function POST(req: Request) {
   try {
-    // Get Firebase Admin app
+    //get admin app
     const adminApp = getAdminApp();
     if (!adminApp) {
       console.error("Firebase Admin not configured (no service account)");
       return NextResponse.json(
         { error: "Server auth not configured" },
-        { status: 500 }
       );
     }
 
     const auth = getAuth(adminApp);
 
-    // get token from firebase (from Authorization header)
+    //get token from header
     const authHeader = req.headers.get("Authorization");
     const token = authHeader?.split("Bearer ")[1];
 
     if (!token) {
-      return NextResponse.json({ error: "Token missing" }, { status: 401 });
+      return NextResponse.json({ error: "Token missing" });
     }
 
-    // verify token
+    //verify
     const decodedToken = await auth.verifyIdToken(token);
 
-    // find user in db by firebase uid
+    //find user by fb uid
     let user = await prisma.user.findUnique({
       where: { firebaseUid: decodedToken.uid },
       include: {
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // if not in db then create them with engineer as default.
+    //if not in db then create them with engineer as default.
     if (!user) {
       user = await prisma.user.create({
         data: {
@@ -63,13 +63,13 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(user);
+
   } catch (err: unknown) {
     if (err instanceof Error) {
-      return NextResponse.json({ err: err.message }, { status: 500 });
+      return NextResponse.json({ err: err.message });
     } else {
       return NextResponse.json(
         { err: "An unknown error occurred." },
-        { status: 500 }
       );
     }
   }
