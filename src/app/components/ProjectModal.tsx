@@ -30,8 +30,8 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   const [proficiency, setProficiency] = useState<Proficiency | "">("");
 
   
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
     
     console.log("New project");
     onClose();

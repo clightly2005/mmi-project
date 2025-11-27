@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const userId = Number(searchParams.get("userId"));
 
-  if (!userId) { return NextResponse.json({ error: "Missing userId parameter" },);}
+  if (!userId) { return NextResponse.json({error: "Missing userId parameter" },);}
 
   const skills = await prisma.engineerSkill.findMany({
     where: { userId },
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
     //skill look up via name
     const skill = await prisma.skill.findUnique({ where: { name: skillName },});
-    if (!skill) { return NextResponse.json({ error: "Skill not found" }, { status: 400 });}
+    if (!skill) { return NextResponse.json({ error:  "Skill not found" }, { status: 400 });}
 
     //create by userId and skillId
     const newEngSkill = await prisma.engineerSkill.create({
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(newEngSkill);
-  } catch (error) {
-    return NextResponse.json({ error: "Internal server error" },);
+  } catch (error: unknown) {
+    return NextResponse.json({error: "Internal server error" },);
   }
 }

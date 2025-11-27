@@ -2,9 +2,8 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { getFirebaseApp } from "../lib/firebaseClient";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut as fbSignOut, createUserWithEmailAndPassword, type User } from "firebase/auth";
-import { getDb } from "../lib/firestoreClient";
-import{ doc, setDoc, getDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged, signOut as fbSignOut, type User } from "firebase/auth";
+
 
 
 type AuthContextValue = {

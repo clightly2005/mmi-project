@@ -1,4 +1,4 @@
-import ProjectRow, { type ProjectRowProps } from "../../components/ProjectRow";
+import ProjectRow from "../../components/ProjectRow";
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

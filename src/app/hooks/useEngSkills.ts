@@ -1,6 +1,5 @@
 "use client";
-import { use, useEffect, useState, useCallback } from "react";
-import { EngSkill } from "../types/engSkills";
+import { useEffect, useState, useCallback } from "react";
 
 export type EngineerSkillWithSkill = {
     id: number;
@@ -23,7 +22,7 @@ export function useEngSkills(userId?: number) {
             const data = await res.json();
             setSkills(data);
         }catch(error){
-            setError("Error fetching engineer skills");
+            setError("Error fetching engineer skills"), error;
         }finally{
             setLoading(false);
         }

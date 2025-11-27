@@ -31,8 +31,8 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   const [proficiency, setProficiency] = useState<Proficiency | "">("");
 
   
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
     //check if user loaded
     if (!user?.id) { console.error("No user loaded"); return;}
     //validate form fields

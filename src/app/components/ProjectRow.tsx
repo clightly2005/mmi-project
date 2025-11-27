@@ -1,4 +1,4 @@
-
+import Image from "next/image";
 import Link from "next/link";
 
 export type ProjectRowProps = {
@@ -18,7 +18,7 @@ export default function ProjectRow({
  
         <div className="md:col-span-3">
           <div className="flex h-28 items-center justify-center rounded-lg bg-neutral-100">
-            <img src="/project.png" alt="Project Icon" className="h-20 w-120 object-contain" />
+            <Image src="/project.png" alt="Project Icon" className="h-20 w-120 object-contain" />
           </div>
         </div>
 
