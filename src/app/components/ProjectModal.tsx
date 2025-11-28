@@ -67,7 +67,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
           <button type="button" onClick={onClose} className="w-1/2 rounded border px-3 py-2 text-sm text-gray-200 hover:bg-white/5">
             Close
           </button>
-          <button form="__implicit" onClick={(e) => (document.querySelector("form") as HTMLFormElement)?.requestSubmit()}
+          <button form="__implicit" onClick={(event) => (document.querySelector("form") as HTMLFormElement)?.requestSubmit()}
             className="w-1/2 rounded bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-700">
             Save
           </button>

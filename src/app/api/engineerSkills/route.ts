@@ -45,6 +45,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(newEngSkill);
   } catch (error: unknown) {
+    console.error("Error in POST /api/engineer-skill:", error);
     return NextResponse.json({error: "Internal server error" },);
   }
 }

@@ -65,7 +65,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  border border-white/10 shadow-2xl backdrop-blur.">
       <div className="w-full max-w-md overflow-hidden rounded-lg bg-modal shadow-lg">
-        <form onSubmit={handleSubmit} className="max-h-[85vh] overflow-y-auto p-7 pb-28 space-y-5 divider-y divider-white/5">
+        <form onSubmit={handleSubmit} id="skills-form" className="max-h-[85vh] overflow-y-auto p-7 pb-28 space-y-5 divider-y divider-white/5">
           <h2 className="mb-1 text-xl font-semibold text-white">Your Profile</h2>
           <p className="text-neutral-200">View your current Skill set below and complete the form fields to add a new one. Please note, when you add a new skill it will request approval from your line manager, so ensure you have evidence.</p>
 
@@ -102,8 +102,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
           <button type="button" onClick={onClose} className="w-1/2 rounded border px-3 py-2 text-sm text-gray-200 hover:bg-white/5">
             Close
           </button>
-          <button form="__implicit" onClick={(e) => (document.querySelector("form") as HTMLFormElement)?.requestSubmit()}
-            className="w-1/2 rounded bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-700">
+          <button type="submit" form="skills-form" className="w-1/2 rounded bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-700">
             Save
           </button>
         </div>
