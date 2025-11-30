@@ -30,17 +30,44 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   const [proficiency, setProficiency] = useState<Proficiency | "">("");
 
   
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    
-    console.log("New project");
-    onClose();
+    //check if user loaded
+    if (!user?.id) { console.error("No user loaded"); return;}
+    //validate form fields
+    if (!skill || !description || !skill || !proficiency || !duration) { console.error("Missing required fields"); return;}
+
+    //turns beginner into BEGINNER for enum db write
+    const enumProficiency = (proficiency as Proficiency).toUpperCase();
+
+    try {
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        body: JSON.stringify({
+          ownerId: user.id,
+          title,
+          description,
+          duration: duration,
+          skillName: String(skill),
+          proficiency: enumProficiency,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() =>({}));
+        console.error("Failed to save project:", data);
+        return;
+      }
+      onClose();
+    } catch (error) {
+      console.error("Error submitting new project:", error);
+    }
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  border border-white/10 shadow-2xl backdrop-blur.">
       <div className="w-full max-w-md overflow-hidden rounded-lg bg-modal shadow-lg">
-        <form onSubmit={handleSubmit} className="max-h-[85vh] overflow-y-auto p-7 pb-28 space-y-5 divider-y divider-white/5">
+        <form onSubmit={handleSubmit} id="projects-form" className="max-h-[85vh] overflow-y-auto p-7 pb-28 space-y-5 divider-y divider-white/5">
           <h2 className="mb-1 text-xl font-semibold text-white">New Project</h2>
           <div>
             <label htmlFor="project" className="block mt-8 text-sm font-medium text-slate-100">Request Originator</label>
@@ -58,7 +85,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
           <div className="grid gap-4 md:grid-cols-2 md:gap-5">
             <SelectField id="skill" label="Primary skill required" value={skill} onChange={(v) => setSkill(v)} options={skillOptions} placeholder="Select a skill"/> 
             <SelectField id="proficiency" label="Minimum proficiency" value={proficiency} onChange={(v) => setProficiency(v as Proficiency)} options={profOptions} placeholder="Select a level" />
-            <SelectField id="duration" label="Estimated duration" value={duration} onChange={(v) => setDuration(v as Duration)} options={["1 month", "2 months", "3 months", "6 months", "1 year"]} placeholder="Select a duration" />
+            <SelectField id="duration" label="Estimated duration" value={duration} onChange={(v) => setDuration(v as Duration)} options={durOptions} placeholder="Select a duration" />
           </div>
 
         </form>
@@ -67,8 +94,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
           <button type="button" onClick={onClose} className="w-1/2 rounded border px-3 py-2 text-sm text-gray-200 hover:bg-white/5">
             Close
           </button>
-          <button form="__implicit" onClick={(event) => (document.querySelector("form") as HTMLFormElement)?.requestSubmit()}
-            className="w-1/2 rounded bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-700">
+          <button type="submit" form="projects-form" className="w-1/2 rounded bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-700">
             Save
           </button>
         </div>

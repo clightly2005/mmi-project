@@ -39,7 +39,7 @@ export default function SignUpPage() {
     return (
         <div className="flex  min-h-full flex-col justify-center py-12 sm:px-6 lg:px-20">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <Image alt="Skill sync" src="logo.png" className="mx-auto h-20 w-auto not-dark:hidden"/>
+          <Image alt="Skill sync" src="/logo.png"  width={300} height={200}  className="mx-auto h-20 w-auto not-dark:hidden"/>
           <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-sky-400">Matchitect</h1>
           <h2 className="mt-6 text-center text-xl font-bold tracking-tight hero">
             Create your account

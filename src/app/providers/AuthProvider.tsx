@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { getFirebaseApp } from "../lib/firebaseClient";
-import { getAuth, onAuthStateChanged, signOut as fbSignOut, type User } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut, type User } from "firebase/auth";
 
 
 

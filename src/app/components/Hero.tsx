@@ -55,7 +55,7 @@ export default function Hero() {
     
             <div className="flex w-full items-center justify-center">
               <div className="relative flex  items-center justify-center rounded-full bg-neutral-100 md:h-[380px] md:w-[380px] sm:h-[280px] sm:w-[280px]">
-                <Image src="/logo.png" alt="SkillSync logo"  fill className="object-contain p-8" 
+                <Image src="/logo.png" alt="SkillSync logo" width={300} height={200}  className="object-contain p-8" 
                   sizes="(max-width: 640px) 280px, (max-width: 768px) 380px, 400px"priority />
               </div>
             </div>

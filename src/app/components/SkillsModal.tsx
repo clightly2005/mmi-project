@@ -22,9 +22,6 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   //role data - readonly 
   const roleName = user?.engineerRole?.name ?? "Not assigned";
 
-  //availability data depending on assignment projects
-  const availability = useAvailability(user?.id);
-    
   //proficiency data for what skill level u have in the selected skill
   const profOptions = ["Beginner","Novice","Intermediate","Advanced","Expert"] as const;
   type Proficiency = typeof profOptions[number];
@@ -38,6 +35,9 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
     //validate form fields
     if (!skill || !proficiency) { console.error("Skill or proficiency not selected"); return;}
 
+    //turns beginner into BEGINNER for enum db write
+    const enumProficiency = (proficiency as Proficiency).toUpperCase();
+
     //call api route for new engineer skill
     try {
       const res = await fetch("/api/engineer-skill", {
@@ -45,7 +45,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({
           userId: user.id,
           skillName: String(skill),
-          proficiency, 
+          proficiency: enumProficiency, 
         }),
       });
 
@@ -91,11 +91,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
             <SelectField id="skill" label="Add a skill" value={skill} onChange={(v) => setSkill(v)} options={skillOptions} placeholder="Select a skill"/> 
             <SelectField id="proficiency" label="Proficiency in selected skill" value={proficiency} onChange={(v) => setProficiency(v as Proficiency)} options={profOptions} placeholder="Select level" />
           </div>
-          <div>
-            <label htmlFor="availability" className=" mt-6 block text-sm font-medium text-slate-100">Your current availability </label>
-            <input id="availability" type="text" required value={availability || ""} readOnly className="w-full mt-2 rounded border bg-white px-3 py-1.5 text-neutral-900"></input>
-          </div>
-          
+         
         </form>
 
         <div className="sticky bottom-0 flex gap-2 border-t border-white/10 bg-modal/95 p-4 backdrop-blur">

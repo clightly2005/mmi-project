@@ -17,12 +17,13 @@ export function useEngSkills(userId?: number) {
         setLoading(true);
         setError(null);
         try{
-            const res = await fetch(`/api/engineerSkills?userId=${userId}`, { method: "GET",});
+            const res = await fetch(`/api/engineer-skill?userId=${userId}`, { method: "GET",});
             if(!res.ok){ throw new Error("Failed to fetch engineer skills");};
             const data = await res.json();
             setSkills(data);
         }catch(error){
-            setError("Error fetching engineer skills"), error;
+            console.log(error);
+            setError("Error fetching engineer skills");
         }finally{
             setLoading(false);
         }

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
     //skill look up via name
     const skill = await prisma.skill.findUnique({ where: { name: skillName },});
-    if (!skill) { return NextResponse.json({ error:  "Skill not found" }, { status: 400 });}
+    if (!skill) { return NextResponse.json({ error:  "Skill not found" },);}
 
     //create by userId and skillId
     const newEngSkill = await prisma.engineerSkill.create({
@@ -46,6 +46,6 @@ export async function POST(request: Request) {
     return NextResponse.json(newEngSkill);
   } catch (error: unknown) {
     console.error("Error in POST /api/engineer-skill:", error);
-    return NextResponse.json({error: "Internal server error" },);
+    return NextResponse.json({error: "Internal server error" }, {status: 500});
   }
 }

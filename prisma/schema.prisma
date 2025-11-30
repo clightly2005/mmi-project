@@ -8,41 +8,30 @@ datasource db {
 }
 
 model application {
-  id         Int                @id @default(autoincrement())
+  id         Int               @id @default(autoincrement())
   userId     Int
   projectId  Int
   matchScore Float?
   status     applicationStatus @default(PENDING)
-  appliedAt  DateTime           @default(now())
-
-  project    project            @relation(fields: [projectId], references: [id])
-  user       user               @relation(fields: [userId], references: [id])
+  appliedAt  DateTime          @default(now())
+  project    project           @relation(fields: [projectId], references: [id])
+  user       user              @relation(fields: [userId], references: [id])
 
   @@index([projectId])
   @@index([userId])
 }
 
-enum ProficiencyLevel {
-  BEGINNER
-  NOVICE
-  INTERMEDIATE
-  ADVANCED
-  EXPERT
-}
-
 model engineerSkill {
-  id          Int   @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   userId      Int
   skillId     Int
   proficiency ProficiencyLevel
-
-  skill       skill @relation(fields: [skillId], references: [id])
-  user        user  @relation(fields: [userId], references: [id])
-
-  @@index([skillId])
-  @@index([userId])
+  skill       skill            @relation(fields: [skillId], references: [id])
+  user        user             @relation(fields: [userId], references: [id])
 
   @@unique([userId, skillId])
+  @@index([skillId])
+  @@index([userId])
 }
 
 model project {
@@ -53,7 +42,6 @@ model project {
   startDate         DateTime?
   ownerId           Int
   createdAt         DateTime            @default(now())
-
   application       application[]
   user              user                @relation(fields: [ownerId], references: [id])
   projectAssignment projectAssignment[]
@@ -68,7 +56,6 @@ model projectAssignment {
   projectId Int
   startDate DateTime
   endDate   DateTime
-
   project   project  @relation(fields: [projectId], references: [id])
   user      user     @relation(fields: [userId], references: [id])
 
@@ -80,8 +67,7 @@ model projectSkill {
   id        Int     @id @default(autoincrement())
   projectId Int
   skillId   Int
-  minLevel  Int
-
+  minLevel  ProficiencyLevel
   project   project @relation(fields: [projectId], references: [id])
   skill     skill   @relation(fields: [skillId], references: [id])
 
@@ -103,16 +89,28 @@ model user {
   createdAt         DateTime            @default(now())
   role              userRole
   firebaseUid       String              @unique
-
   engineerRoleId    Int?
-  engineerRole      engineerRole?       @relation(fields: [engineerRoleId], references: [id])
-
   application       application[]
   engineerSkill     engineerSkill[]
   project           project[]
   projectAssignment projectAssignment[]
+  engineerRole      engineerRole?       @relation(fields: [engineerRoleId], references: [id])
 
   @@index([engineerRoleId])
+}
+
+model engineerRole {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users user[]
+}
+
+enum ProficiencyLevel {
+  BEGINNER
+  NOVICE
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
 }
 
 enum applicationStatus {
@@ -124,10 +122,4 @@ enum applicationStatus {
 enum userRole {
   ENGINEER
   PM
-}
-
-model engineerRole {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  users user[]
 }
