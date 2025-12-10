@@ -23,19 +23,9 @@ export default function ProjectsClient({
   return (
     <>
     <div className="space-y-6">
-        <Search
-          projects={initialProjects}
-          onFilter={setFilteredProjects}
-        />
-      
-
-      <Pagination
-        page={page}
-        totalPages={totalPages}
-        totalResults={totalResults}
-      />
-
-      <ProjectsList projects={filteredProjects} />
+        <Search projects={initialProjects} onFilter={setFilteredProjects}/>
+        <Pagination page={page} totalPages={totalPages} totalResults={totalResults}/>
+        <ProjectsList projects={filteredProjects} />
     </div>
     </>
   );

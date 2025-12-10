@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
@@ -46,10 +46,9 @@ export default function Pagination({ page, totalPages, totalResults }: Paginatio
         {pages.map((p, i) => {
           const showEllipsis = i > 0 && p - pages[i - 1] > 1;
           return (
-            <>
+            <React.Fragment key={p}>
               {showEllipsis && (
-                <span key={`dots-${p}`}
-                  className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-400 inset-ring inset-ring-gray-300 dark:inset-ring-gray-700">
+                <span key={`dots-${p}`} className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-400 inset-ring inset-ring-gray-300 dark:inset-ring-gray-700">
                   …
                 </span>
               )}
@@ -59,7 +58,7 @@ export default function Pagination({ page, totalPages, totalResults }: Paginatio
                 : "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:text-gray-200 dark:inset-ring-gray-700 dark:hover:bg-white/5" }>
                 {p}
               </Link>
-            </>
+            </React.Fragment>
           );
         })}
 

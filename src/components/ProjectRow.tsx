@@ -11,9 +11,7 @@ export default function ProjectRow({
 }: ProjectRowProps) {
   //just for the view button so admins only have this option and favorite for engineer
   const user = useUser();
-  if (user === null) return <p className="text-2xl  tracking-tight hero md:text-2xl">Loading...</p>;
-  if (!user.role) return <p className="text-2xl  tracking-tight hero md:text-2xl">Fetching profile...</p>;
-    
+ 
   return (
     <article className="rounded-xl border bg-white/80 p-4 shadow-sm hover:shadow-md transition">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:items-center">

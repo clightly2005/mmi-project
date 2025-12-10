@@ -35,12 +35,7 @@ export default async function ProjectsPage({searchParams,}: {searchParams: Searc
     <div className="max-w-6xl mx-auto p-8 space-y-6">
       <h1 className="text-3xl font-bold hero mb-2">All Projects</h1>
       <p className="hero">Search for a project by entering a Skill, Title or Description</p>
-      <ProjectsClient
-        initialProjects={projects}
-        totalResults={totalResults}
-        page={page}
-        totalPages={totalPages}
-      />
+      <ProjectsClient initialProjects={projects}  totalResults={totalResults}  page={page}  totalPages={totalPages}/>
     </div>
   );
 }
