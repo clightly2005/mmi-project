@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "placeholder-loading/dist/css/placeholder-loading.min.css";
 
 :root {
   --background: #ffffff;

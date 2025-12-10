@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import SelectField from "../components/SelectFields";
+import SelectField from "./SelectFields";
 import { useSkills } from "../hooks/useSkills";
 import { useUser } from "../hooks/useUser";
 

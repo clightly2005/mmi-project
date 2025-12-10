@@ -6,19 +6,17 @@ import {usePathname } from "next/navigation";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const pathname = usePathname();
-
+    
     //will hide nav on auth pages
+    const pathname = usePathname();
     const isAuthRoute =  pathname === "/signin" || pathname === "/signup";
-
     useEffect(() => {
         setMenuOpen(false);
     }, [pathname]);
-
     if(isAuthRoute) return null;
 
-    return (
-            
+    
+    return (       
     <nav className=" shadow-md ">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         <h1 className="text-xl font-extrabold text-sky-400 tracking-wide">Matchitect</h1>
@@ -40,15 +38,7 @@ export default function Navbar() {
             <Link href="/signin" className="block text-white py-1 hover:text-sky-400" >
                 Logout 
             </Link>     
-            <form action="/search" method="get" className="mt-3 mb-2 flex items-center gap-2">
-                <input
-                type="search" name="q" placeholder="Search..."
-                className="border button-primary rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-sky-600"
-                />
-                <button type="submit" className="button-secondary rounded px-3 py-1.5 text-white hover:bg-sky-900">
-                Go
-                </button>
-            </form>
+           
                     
             </div>
         </div>

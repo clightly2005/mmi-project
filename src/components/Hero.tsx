@@ -1,7 +1,7 @@
 "use client";
 //conditionally renders text and modals depending on role assigned to a users account 
-import SkillsModal from "../components/SkillsModal";
-import ProjectModal from "../components/ProjectModal";
+import SkillsModal from "./SkillsModal";
+import ProjectModal from "./ProjectModal";
 import Image from "next/image";
 import {  useState } from "react";
 import { useUser }  from "../hooks/useUser";

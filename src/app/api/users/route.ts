@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
-import { getAdminApp } from "../../lib/firebaseAdmin";
+import { getAdminApp } from "../../../lib/firebaseAdmin";
 
 const prisma = new PrismaClient();
 

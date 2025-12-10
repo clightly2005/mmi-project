@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getAuth } from "firebase-admin/auth";
-import { getAdminApp } from "../../../lib/firebaseAdmin";
+import { getAdminApp } from "../../../../lib/firebaseAdmin";
 
 //ensures user exists on every page load with their auth etc
 //returns up to date user record from db if skills etc changing
@@ -42,6 +42,8 @@ export async function POST(req: Request) {
         },
       },
     });
+
+  
 
     //if not in db then create them with engineer as default.
     if (!user) {

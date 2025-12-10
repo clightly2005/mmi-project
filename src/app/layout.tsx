@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import Navbar from "./components/Nav";
+import Navbar from "../components/Nav";
 
 export const metadata: Metadata = {
   title: "SkillSync | Project Matching",

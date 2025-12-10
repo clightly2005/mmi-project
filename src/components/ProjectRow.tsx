@@ -1,16 +1,9 @@
 "use client";
-
+import { ProjectRowProps } from "../types/projects";
 import Image from "next/image";
 import Link from "next/link";
 import { useUser }  from "../hooks/useUser";
 
-export type ProjectRowProps = {
-  id: number | string;
-  title: string;
-  description: string;       
-  requiredSkills: { name: string; minProf: string }[];
-  durationLabel?: string;  
-};
 
 
 export default function ProjectRow({
@@ -37,7 +30,7 @@ export default function ProjectRow({
               <p className=" text-sky-500 hover:text-sky-600 ">{title}</p>
             </h3>
             {durationLabel && (
-              <span className="rounded-full bg-neutral-300/70 px-2 py-1 text-xs text-neutral-700">
+              <span className="rounded-full bg-neutral-300/70 px-2 py-1 text-xs text-sky-900">
                 {durationLabel}
               </span>
             )}
@@ -46,12 +39,12 @@ export default function ProjectRow({
           <p className="mt-1 text-sm hero">{description}</p>
 
           <div className="mt-3">
-            <div className="mb-1 text-sm font-medium hero">Required skills</div>
-            <div className="flex flex-wrap gap-2">
+            <div className="mb-1 text-sm font-medium hero">Required skill</div>
+            <div className="flex mt-1 flex-wrap gap-2">
               {requiredSkills.length ? requiredSkills.map((s) => (
-                <span key={s.name} className=" font-bold inline-flex items-center hero gap-1 rounded-full bg-neutral-300/70 px-2 py-1 text-xs">
+                <span key={s.name} className=" font-bold inline-flex items-center hero gap-2 rounded-full bg-neutral-300/70 px-2 py-1 text-xs">
                   {s.name}
-                  <span className="rounded bg-neutral-900 px-1.5 py-0.5 text-[10px] text-white">{s.minProf}</span>
+                  <span className="rounded bg-slate-900 px-1.5 py-0.5 text-[10px] text-white">{s.minProf}</span>
                 </span>
               )) : (
                 <span className="text-sm text-neutral-500">None specified</span>

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirebaseApp } from "@/app/lib/firebaseClient";
+import { getFirebaseApp } from "@/lib/firebaseClient";
 
 export default function SignUpPage() {
     const auth = getAuth(getFirebaseApp());
@@ -27,15 +27,22 @@ export default function SignUpPage() {
         });
         setMsg("Account created!");
       } 
-      catch (err: unknown){
-        if (err instanceof Error){
-          console.log(err.message);
-        }else{
-          console.log("An unknown error occurred.", err);
-        }     
+      catch (err: any){
+        if(err.code === 'auth/email-already-in-use'){
+          setMsg("This email is already in use. Please sign in instead.");
+          return;
+        }
+        if(err.code === 'auth/invalid-email'){
+          setMsg("The email address is not valid. Please re-enter a valid email address.");
+          return;
+        }
+        if(err.code === 'auth/weak-password'){
+          setMsg("The password is too weak. Please re-enter a stronger password that is more than 6 chars long.");
+          return;
+        }    
       }
     }
-    
+
     return (
         <div className="flex  min-h-full flex-col justify-center py-12 sm:px-6 lg:px-20">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -65,8 +72,9 @@ export default function SignUpPage() {
                 </label>
                 <div className="mt-2">
                   <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}
-                    className="block w-full rounded-md  px-3 py-1.5 text-base outline-1 -outline-offset-1  focus:outline-sky-600 sm:text-sm/6 dark:bg-blue-900/5 dark:text-white dark:outline-blue-600/20 dark:focus:outline-sky-500"/>
+                    className="block w-full rounded-md  px-3 py-1.5 text-base outline-1 -outline-offset-1  focus:outline-sky-600 sm:text-sm/6 dark:bg-blue-900/5 dark:text-white dark:outline-blue-600/20 dark:focus:outline-sky-500"/>  
                 </div>
+                {msg && <p className="text-red-800 dark:text-red-800 text-sm mt-1">{msg}</p>}
               </div>
 
               <div>
@@ -74,7 +82,6 @@ export default function SignUpPage() {
                   className="flex w-full justify-center rounded-md mt-8 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs dark:bg-sky-500 dark:shadow-sm dark:hover:bg-sky-600 dark:focus-visible:outline-sky-800">
                   Sign up
                 </button>
-                {msg && <p className="text-red-400">{msg}</p>}
               </div>
             </form>
             <p className="mt-10 text-center text-sm/6 text-blue-950">
