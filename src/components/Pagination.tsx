@@ -7,9 +7,12 @@ type PaginationProps = {
   page: number;
   totalPages: number;
   totalResults: number;
+  q?: string;
 };
 
-export default function Pagination({ page, totalPages, totalResults }: PaginationProps) {
+export default function Pagination({ page, totalPages, totalResults, q = "" }: PaginationProps) {
+  const qp = q ? `&q=${encodeURIComponent(q)}` : "";
+
   const createPageNumbers = () => {
     const pages = [];
     pages.push(1);//shows first page first
@@ -37,7 +40,7 @@ export default function Pagination({ page, totalPages, totalResults }: Paginatio
       </p>
 
       <nav className="isolate inline-flex -space-x-px rounded-md shadow-xs dark:shadow-none">
-        <Link  href={`/projects?page=${Math.max(page - 1, 1)}`}
+        <Link  href={`/projects?page=${Math.max(page - 1, 1)}${qp}`}
           className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:inset-ring-gray-700 dark:hover:bg-white/5" >
           <span className="sr-only">Previous</span>
           <ChevronLeftIcon className="h-5 w-5" />
@@ -53,7 +56,7 @@ export default function Pagination({ page, totalPages, totalResults }: Paginatio
                 </span>
               )}
 
-              <Link key={p} href={`/projects?page=${p}`} aria-current={p === page ? "page" : undefined}
+              <Link key={p} href={`/projects?page=${p}${qp}`} aria-current={p === page ? "page" : undefined}
                 className={ p === page ? "relative z-10 inline-flex items-center bg-sky-600 px-4 py-2 text-sm font-semibold text-white dark:bg-sky-600"
                 : "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:text-gray-200 dark:inset-ring-gray-700 dark:hover:bg-white/5" }>
                 {p}
@@ -62,7 +65,7 @@ export default function Pagination({ page, totalPages, totalResults }: Paginatio
           );
         })}
 
-        <Link href={`/projects?page=${Math.min(page + 1, totalPages)}`}
+        <Link href={`/projects?page=${Math.min(page + 1, totalPages)}${qp}`}
           className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:inset-ring-gray-700 dark:hover:bg-white/5">
           <span className="sr-only">Next</span>
           <ChevronRightIcon className="h-5 w-5" />

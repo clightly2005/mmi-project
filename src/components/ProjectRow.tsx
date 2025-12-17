@@ -3,7 +3,8 @@ import { ProjectRowProps } from "../types/projects";
 import Image from "next/image";
 import Link from "next/link";
 import { useUser }  from "../hooks/useUser";
-
+import toast from "react-hot-toast";
+import { favProject } from "../hooks/useProjects";
 
 
 export default function ProjectRow({
@@ -12,6 +13,17 @@ export default function ProjectRow({
   //just for the view button so admins only have this option and favorite for engineer
   const user = useUser();
  
+  async function handleFavourite(projectId: number) {
+    try{
+      if(!user) throw new Error("User not logged in");
+      await favProject(projectId, user.id);
+      toast.success("Project favourited!");
+    }catch(err){
+      console.error(err);
+      toast.error((err as Error).message);
+    }
+  }
+
   return (
     <article className="rounded-xl border bg-white/80 p-4 shadow-sm hover:shadow-md transition">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:items-center">
@@ -25,7 +37,7 @@ export default function ProjectRow({
         <div className="md:col-span-9">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <h3 className="text-lg font-semibold">
-              <p className=" text-sky-500 hover:text-sky-600 ">{title}</p>
+              <p className=" text-sky-500 ">{title}</p>
             </h3>
             {durationLabel && (
               <span className="rounded-full bg-neutral-300/70 px-2 py-1 text-xs text-sky-900">
@@ -42,7 +54,7 @@ export default function ProjectRow({
               {requiredSkills.length ? requiredSkills.map((s) => (
                 <span key={s.name} className=" font-bold inline-flex items-center hero gap-2 rounded-full bg-neutral-300/70 px-2 py-1 text-xs">
                   {s.name}
-                  <span className="rounded bg-slate-900 px-1.5 py-0.5 text-[10px] text-white">{s.minProf}</span>
+                  <span className="text-sky-600 px-1.5  text-[10px] ">{s.minProf}</span>
                 </span>
               )) : (
                 <span className="text-sm text-neutral-500">None specified</span>
@@ -55,11 +67,11 @@ export default function ProjectRow({
           )}
 
           {user?.role === "ENGINEER" && (
-             <a href={`/projects/${id}`} className="rounded-full border border-yellow-500 bg-yellow-400/50 hover:bg-yellow-400/70 text-neutral-900 px-3 py-1.5 text-sm hover:bg-yellow-60">
+            <button onClick={() => handleFavourite(id)} className="rounded-full border border-yellow-500 bg-yellow-400/50 hover:bg-yellow-400/70 text-neutral-900 px-3 py-1.5 text-sm transition" aria-label="Favourite this project">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                 <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
               </svg>
-            </a>
+            </button>
           )}
          </div>
         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ProjectWithSkills } from "@/types/projects";
 
-//handles typing and filtering projects by title, desc, skill
+//handles typing and filtering projects by title, and skill
 type SearchProps = {
     projects: ProjectWithSkills[];
     onFilter: (filtered: ProjectWithSkills[]) => void;
@@ -16,7 +16,6 @@ export default function Search({projects, onFilter}: SearchProps) {
             if(!trimmed) return true;//when nothing is typed return all
             return(
                 project.title.toLowerCase().includes(trimmed) ||
-                project.description.toLowerCase().includes(trimmed) ||
                 project.projectSkill.some((s) => s.skill.name.toLowerCase().includes(trimmed))
             )
     });

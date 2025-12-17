@@ -35,17 +35,18 @@ model engineerSkill {
 }
 
 model project {
-  id                Int                 @id @default(autoincrement())
-  title             String
-  description       String
-  durationWeeks     Int
-  startDate         DateTime?
-  ownerId           Int
-  createdAt         DateTime            @default(now())
-  application       application[]
-  user              user                @relation(fields: [ownerId], references: [id])
-  projectAssignment projectAssignment[]
-  projectSkill      projectSkill[]
+  id                 Int                  @id @default(autoincrement())
+  title              String
+  description        String
+  durationWeeks      Int
+  startDate          DateTime?
+  ownerId            Int
+  createdAt          DateTime             @default(now())
+  application        application[]
+  engineerFavProject engineerFavProject[]
+  user               user                 @relation(fields: [ownerId], references: [id])
+  projectAssignment  projectAssignment[]
+  projectSkill       projectSkill[]
 
   @@index([ownerId])
 }
@@ -64,12 +65,12 @@ model projectAssignment {
 }
 
 model projectSkill {
-  id        Int     @id @default(autoincrement())
+  id        Int              @id @default(autoincrement())
   projectId Int
   skillId   Int
   minLevel  ProficiencyLevel
-  project   project @relation(fields: [projectId], references: [id])
-  skill     skill   @relation(fields: [skillId], references: [id])
+  project   project          @relation(fields: [projectId], references: [id])
+  skill     skill            @relation(fields: [skillId], references: [id])
 
   @@index([projectId])
   @@index([skillId])
@@ -83,18 +84,19 @@ model skill {
 }
 
 model user {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  email             String              @unique
-  createdAt         DateTime            @default(now())
-  role              userRole
-  firebaseUid       String              @unique
-  engineerRoleId    Int?
-  application       application[]
-  engineerSkill     engineerSkill[]
-  project           project[]
-  projectAssignment projectAssignment[]
-  engineerRole      engineerRole?       @relation(fields: [engineerRoleId], references: [id])
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  email              String               @unique
+  createdAt          DateTime             @default(now())
+  role               userRole
+  firebaseUid        String               @unique
+  engineerRoleId     Int?
+  application        application[]
+  engineerFavProject engineerFavProject[]
+  engineerSkill      engineerSkill[]
+  project            project[]
+  projectAssignment  projectAssignment[]
+  engineerRole       engineerRole?        @relation(fields: [engineerRoleId], references: [id])
 
   @@index([engineerRoleId])
 }
@@ -103,6 +105,17 @@ model engineerRole {
   id    Int    @id @default(autoincrement())
   name  String @unique
   users user[]
+}
+
+model engineerFavProject {
+  id           Int       @id @default(autoincrement())
+  engineerId   Int
+  projectId    Int
+  favouritedAt DateTime @default(now())
+  user         user     @relation(fields: [engineerId], references: [id], onDelete: Cascade, map: "favourited_engineerId_fkey")
+  project      project  @relation(fields: [projectId], references: [id], onDelete: Cascade, map: "favourited_projectId_fkey")
+  
+  @@unique([engineerId, projectId], name: "engineerId_projectId")
 }
 
 enum ProficiencyLevel {

@@ -10,7 +10,7 @@ export type ProjectWithSkills = {
 };
 
 export type ProjectRowProps = {
-  id: number | string;
+  id: number;
   title: string;
   description: string;       
   requiredSkills: { name: string; minProf: string }[];

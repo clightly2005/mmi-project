@@ -82,7 +82,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
             Skill set: </label>
             <div className="flex flex-wrap gap-2">{ hasEngSkills ? ( engSkills.map((s) => (
               <span key={s.id} className="inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-slate-900 shadow-sm">{s.skill.name}
-                <span className="rounded bg-slate-900 text-white px-1.5 py-0.5 text-[10px]"> {s.proficiency} </span></span>
+                <span className="text-sky-700 px-1.5  text-[10px]"> {s.proficiency} </span></span>
                 )) ) : (
                   <span className="text-sm text-slate-400 italic">No skills specified</span>)}
             </div>
