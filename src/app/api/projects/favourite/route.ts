@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient} from '@prisma/client';
+import { Prisma } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
@@ -14,7 +16,8 @@ export async function POST(req: Request) {
         }
         try{
             await prisma.engineerFavProject.create({ data: { projectId: pid, engineerId: eid}, });
-        } catch(err: any){
+        } catch(err: unknown){
+            if( err instanceof Prisma.PrismaClientKnownRequestError)
             //already favourited it
             if(err?.code !== "P2002") throw err;
         }

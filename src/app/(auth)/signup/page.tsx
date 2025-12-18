@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirebaseApp } from "@/lib/firebaseClient";
+import { FirebaseError} from 'firebase/app'
 
 export default function SignUpPage() {
     const auth = getAuth(getFirebaseApp());
@@ -13,6 +14,9 @@ export default function SignUpPage() {
     async function handleSubmit(e: React.FormEvent) {
       e.preventDefault();
       setMsg(null);
+      function firebaseError(e: unknown): e is FirebaseError{
+        return typeof e === 'object' && e !== null && 'code' in e && typeof (e as any).code === 'string';
+      }
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -27,7 +31,8 @@ export default function SignUpPage() {
         });
         setMsg("Account created!");
       } 
-      catch (err: any){
+      catch (err: unknown){
+        if(firebaseError(err)){
         if(err.code === 'auth/email-already-in-use'){
           setMsg("This email is already in use. Please sign in instead.");
           return;
@@ -40,6 +45,7 @@ export default function SignUpPage() {
           setMsg("The password is too weak. Please re-enter a stronger password that is more than 6 chars long.");
           return;
         }    
+       }
       }
     }
 

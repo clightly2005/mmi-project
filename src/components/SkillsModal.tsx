@@ -5,7 +5,6 @@ import SelectField from "./SelectFields";
 import { useSkills } from "../hooks/useSkills";
 import { useUser } from "../hooks/useUser";
 import { useEngSkills } from "../hooks/useEngSkills";
-import { useAvailability } from "../hooks/useAvailability";
 
 export default function ProjectModal({ onClose }: { onClose: () => void }) {
 

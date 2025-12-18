@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from  "firebase/app"
 import { getFirebaseApp } from "@/lib/firebaseClient";
 
 export default function SignInPage() {
@@ -12,26 +13,33 @@ export default function SignInPage() {
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState<string | null>(null);
 
+    
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setMsg(null)
-        
+            function firebaseError(e: unknown): e is FirebaseError{
+            return typeof e === 'object' && e !== null && 'code' in e && typeof (e as any).code === 'string';
+           }
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.push("/home");
-        } catch (err: any){
-          if(err.code === 'auth/invalid-email'){
-          setMsg("The email address is not valid. Please re-enter a valid email address.");
+        } catch (err: unknown){
+          if(firebaseError(err)) {
+            if(err.code === 'auth/invalid-email'){
+              setMsg("The email address is not valid. Please re-enter a valid email address.");
+              return;
+            }
+            if(err.code === 'auth/weak-password'){
+              setMsg("The password is too weak. Please re-enter a stronger password that is more than 6 chars long.");
+              return;
+            }   
+            if(err.code === 'auth/user-not-found'){   
+              setMsg("No account found with this email. Please sign up first.");
+              return;
+            }
+          // Fallback for other Firebase auth codes
+          setMsg(err.message || 'An unexpected authentication error occurred.');
           return;
-        }
-        if(err.code === 'auth/weak-password'){
-          setMsg("The password is too weak. Please re-enter a stronger password that is more than 6 chars long.");
-          return;
-        }   
-        if(err.code === 'auth/user-not-found'){   
-          setMsg("No account found with this email. Please sign up first.");
-          return;
-        }
       }
     }
     
@@ -87,5 +95,6 @@ export default function SignInPage() {
       </div>
 
     );
+  }
 }
 
