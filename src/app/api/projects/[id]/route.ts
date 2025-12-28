@@ -1,14 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from '@/lib/prismaClient'
 
-export async function GET(req: Request, ctx: {params: { id: string}}){
-    const id = Number(ctx.params.id);
+export async function GET(req: NextRequest, {params} : {params: Promise<{ id: string}>}){
+    const {id} = await params;
+
+    const projectId = Number(id);
     if(!Number.isFinite(id)){
         return NextResponse.json({error: "Invalid project id"}, {status: 400});
     }
 
     const project = await prisma.project.findUnique({
-        where: {id},
+        where: {id: projectId},
         select: {id: true, title: true, description: true, durationWeeks: true},
     });
 
