@@ -7,6 +7,7 @@ export type ProjectWithSkills = {
         minLevel: string,
         skill: { name: string },
     }[];
+    projectType?: string | null;
 };
 
 export type ProjectRowProps = {
@@ -15,5 +16,6 @@ export type ProjectRowProps = {
   description: string;       
   requiredSkills: { name: string; minProf: string }[];
   durationLabel?: string;  
+  projectType?: string | null;
 };
  

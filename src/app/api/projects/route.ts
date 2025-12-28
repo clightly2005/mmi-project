@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient, ProficiencyLevel } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { ProficiencyLevel } from "@prisma/client";
+import { prisma } from '@/lib/prismaClient'
 
 ///makes duration string into number of weeks
 function durationToWeeks(duration: string): number {
@@ -13,10 +12,10 @@ function durationToWeeks(duration: string): number {
 export async function POST(req: NextRequest) {
     try{
         const body = await req.json();
-        const { ownerId, title, description, duration, skillName, proficiency,
-        } = body as { ownerId?: number; title?: string; description?: string; duration?: string; skillName?: string; proficiency?: string;};
+        const { ownerId, title, description, duration, skillName, proficiency, projectType,
+        } = body as { ownerId?: number; title?: string; description?: string; duration?: string; skillName?: string; proficiency?: string; projectType?: string;};
 
-        if(!ownerId || !title || !description || !duration || !skillName || !proficiency){
+        if(!ownerId || !title || !description || !duration || !skillName || !proficiency || !projectType){
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
@@ -25,7 +24,8 @@ export async function POST(req: NextRequest) {
         if(!skill){ return NextResponse.json({ error: "Skill not found" }, { status: 400 }); }
 
         const enumProficiency = proficiency.toUpperCase() as ProficiencyLevel;
-        const project = await prisma.project.create({ data: { ownerId, title, description, durationWeeks, projectSkill: {
+     
+        const project = await prisma.project.create({ data: { ownerId, title, description, durationWeeks, projectType, projectSkill: {
                 create: { skillId: skill.id, minLevel: enumProficiency}, },},
                 include: { projectSkill: { include: { skill: true}
             }, 

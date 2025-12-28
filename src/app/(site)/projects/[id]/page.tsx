@@ -1,8 +1,5 @@
 //project detail page
-import { PrismaClient } from "@prisma/client";
-import {ProjectRowProps} from "@/types/projects";
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prismaClient'
 
 export default async function ProjectPage({params}: {params: { id: string}}) {
     const projectId = Number(params.id);

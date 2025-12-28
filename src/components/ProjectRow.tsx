@@ -6,13 +6,27 @@ import { useUser }  from "../hooks/useUser";
 import toast from "react-hot-toast";
 import { favProject } from "../hooks/useProjects";
 
+//helper function so always has safe page
+export function getProjectImage(type?: string) {
+  switch (type) {
+    case "software":
+      return "/project-images/software.jpg";
+    case "network":
+      return "/project-images/network.jpg";
+    case "tech":
+      return "/project-images/tech.jpg";
+    default:
+      return "/project-images/project.png";
+  }
+}
 
 export default function ProjectRow({
-  id, title, description, requiredSkills, durationLabel,
+  id, title, description, requiredSkills, durationLabel, projectType,
 }: ProjectRowProps) {
   //just for the view button so admins only have this option and favorite for engineer
   const user = useUser();
- 
+ console.log("ProjectRow projectType:", projectType);
+
   async function handleFavourite(projectId: number) {
     try{
       if(!user) throw new Error("User not logged in");
@@ -30,7 +44,7 @@ export default function ProjectRow({
  
         <div className="md:col-span-3">
           <div className="flex h-28 items-center justify-center rounded-lg bg-neutral-100">
-            <Image src="/project.png" alt="Project Icon" width={100} height={100} className="object-contain" />
+            <Image src={getProjectImage(projectType ?? undefined)} alt={`${projectType ?? "project"} icon`} width={150} height={150} className="object-contain max-w-full max-h-full rounded-lg" />
           </div>
         </div>
        

@@ -5,6 +5,8 @@ import SelectField from "./SelectFields";
 import { useSkills } from "../hooks/useSkills";
 import { useUser } from "../hooks/useUser";
 
+
+
 export default function ProjectModal({ onClose }: { onClose: () => void }) {
 
   //account data - readonly
@@ -29,16 +31,21 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   type Proficiency = typeof profOptions[number];
   const [proficiency, setProficiency] = useState<Proficiency | "">("");
 
-  
+  const typeOptions = ["Tech", "Software", "Networks"];
+  type ProjectType = typeof typeOptions[number];
+  const [projectType, setProjectType] = useState<ProjectType | "">("");
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     //check if user loaded
     if (!user?.id) { console.error("No user loaded"); return;}
     //validate form fields
-    if (!skill || !description || !skill || !proficiency || !duration) { console.error("Missing required fields"); return;}
+    if (!title || !description || !skill || !proficiency || !duration || !projectType) { console.error("Missing required fields"); return;}
 
     //turns beginner into BEGINNER for enum db write
     const enumProficiency = (proficiency as Proficiency).toUpperCase();
+    //turns lower case for DB read
+    const normaliseProjType = (projectType as ProjectType).toLocaleLowerCase();
 
     try {
       const res = await fetch("/api/projects", {
@@ -50,6 +57,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
           duration: duration,
           skillName: String(skill),
           proficiency: enumProficiency,
+          projectType: normaliseProjType,
         }),
       });
 
@@ -86,6 +94,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
             <SelectField id="skill" label="Primary skill required" value={skill} onChange={(v) => setSkill(v)} options={skillOptions} placeholder="Select a skill"/> 
             <SelectField id="proficiency" label="Minimum proficiency" value={proficiency} onChange={(v) => setProficiency(v as Proficiency)} options={profOptions} placeholder="Select a level" />
             <SelectField id="duration" label="Estimated duration" value={duration} onChange={(v) => setDuration(v as Duration)} options={durOptions} placeholder="Select a duration" />
+            <SelectField id="type" label="Project type" value={projectType} onChange={(v) => setProjectType(v as ProjectType)}options={typeOptions} placeholder="Select this project focus area"/>
           </div>
 
         </form>

@@ -8,14 +8,16 @@ import { ProjectWithSkills } from "@/types/projects";
 
 export default function ProjectsClient({
   initialProjects,
+  currentPage,
+  totalPages,
   totalResults,
-  page,
-  totalPages
+  query,
 }: {
   initialProjects: ProjectWithSkills[];
-  totalResults: number;
-  page: number;
+  currentPage: number;
   totalPages: number;
+  totalResults: number;
+  query: string;
 }) {
 
   const [filteredProjects, setFilteredProjects] = useState(initialProjects);
@@ -24,7 +26,7 @@ export default function ProjectsClient({
     <>
     <div className="space-y-6">
         <Search projects={initialProjects} onFilter={setFilteredProjects}/>
-        <Pagination page={page} totalPages={totalPages} totalResults={totalResults}/>
+        <Pagination page={currentPage} totalPages={totalPages} totalResults={totalResults} q={query}/>
         <ProjectsList projects={filteredProjects} />
     </div>
     </>

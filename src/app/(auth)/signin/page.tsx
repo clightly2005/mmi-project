@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from  "firebase/app"
 import { getFirebaseApp } from "@/lib/firebaseClient";
+import { sendResetEmail } from "@/lib/auth";
 
 export default function SignInPage() {
     const router = useRouter();
@@ -17,9 +18,7 @@ export default function SignInPage() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setMsg(null)
-            function firebaseError(e: unknown): e is FirebaseError{
-            return typeof e === 'object' && e !== null && 'code' in e && typeof (e as any).code === 'string';
-           }
+        function firebaseError(e: unknown): e is FirebaseError{ return typeof e === 'object' && e !== null && 'code' in e && typeof (e as any).code === 'string';}
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.push("/home");
@@ -42,6 +41,7 @@ export default function SignInPage() {
           return;
       }
     }
+  }
     
     return (
         <div className="flex  min-h-full flex-col justify-center py-12 sm:px-6 lg:px-20">
@@ -75,6 +75,10 @@ export default function SignInPage() {
                     className="block w-full rounded-md  px-3 py-1.5 text-base outline-1 -outline-offset-1  focus:outline-sky-600 sm:text-sm/6 dark:bg-blue-900/5 dark:text-white dark:outline-blue-600/20 dark:focus:outline-sky-500"/>
                   {msg && <p className="text-red-800 dark:text-red-800 text-sm mt-1">{msg}</p>}
                 </div>
+                <p className="mt-4 text-center text-sm text-sky-600 hover:underline cursor-pointer" onClick={() => sendResetEmail(email, setMsg)}>
+                  Forgot password?
+                </p>
+
               </div>
 
               <div>
@@ -86,7 +90,7 @@ export default function SignInPage() {
             </form>
             <p className="mt-10 text-center text-sm/6 text-blue-950">
               No account?{" " }
-              <a href="/signup" className="font-semibold dark:hover:text-sky-700 dark:text-sky-950 dark:hover:underline" >
+              <a href="/signup" className="font-semibold dark:hover:text-sky-600 dark:text-sky-950 dark:hover:underline" >
                 Sign up here!
               </a>
            </p>
@@ -95,6 +99,6 @@ export default function SignInPage() {
       </div>
 
     );
-  }
 }
+
 

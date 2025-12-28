@@ -42,6 +42,7 @@ model project {
   startDate          DateTime?
   ownerId            Int
   createdAt          DateTime             @default(now())
+  projectType        String?
   application        application[]
   engineerFavProject engineerFavProject[]
   user               user                 @relation(fields: [ownerId], references: [id])
@@ -109,13 +110,11 @@ model engineerRole {
 
 model engineerFavProject {
   id           Int       @id @default(autoincrement())
-  engineerId   Int
-  projectId    Int
-  favouritedAt DateTime @default(now())
-  user         user     @relation(fields: [engineerId], references: [id], onDelete: Cascade, map: "favourited_engineerId_fkey")
-  project      project  @relation(fields: [projectId], references: [id], onDelete: Cascade, map: "favourited_projectId_fkey")
-  
-  @@unique([engineerId, projectId], name: "engineerId_projectId")
+  engineerId   Int?
+  projectId    Int?
+  favouritedAt DateTime? @db.Date
+  user         user?     @relation(fields: [engineerId], references: [id], onDelete: Cascade, map: "favourited_engineerId_fkey")
+  project      project?  @relation(fields: [projectId], references: [id], onDelete: Cascade, map: "favourited_projectId_fkey")
 }
 
 enum ProficiencyLevel {

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient, ProficiencyLevel } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { ProficiencyLevel } from "@prisma/client";
+import { prisma } from '@/lib/prismaClient'
 
 //get skill/proficiency for user engineer
 export async function GET(request: Request) {
