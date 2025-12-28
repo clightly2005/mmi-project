@@ -26,7 +26,7 @@ export default async function ProjectPage({params}: {params: { id: string}}) {
                 <p className="mt-2 text-md hero">
                     <span className="font-bold">Main required skill:</span>{" "}
                     <span className="text-sky-600">{mainSkill.skill.name}</span>{" "}
-                    <span className="text-slate-600">({mainSkill.minLevel.toLocaleLowerCase()})</span>
+                    <span className="text-slate-600">({mainSkill.minLevel.toLowerCase()})</span>
                 </p>
             ) : (
                 <p className="mt-2 text-md hero text-slate-600">
