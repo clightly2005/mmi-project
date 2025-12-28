@@ -5,7 +5,7 @@ export async function GET(req: NextRequest, {params} : {params: Promise<{ id: st
     const {id} = await params;
 
     const projectId = Number(id);
-    if(!Number.isFinite(projectId)){
+    if(!Number.isInteger(projectId)){
         return NextResponse.json({error: "Invalid project id"}, {status: 400});
     }
 
