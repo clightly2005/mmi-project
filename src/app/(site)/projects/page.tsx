@@ -8,9 +8,7 @@ function parsePage(page?: string | string[]) {
   return Number.isFinite(num) && num > 0 ? num : 1
 }
 
-function parseQuery(q?: string | string[]) {
-  return Array.isArray(q) ? q[0] : q ?? ''
-}
+
 
 type ProjectsPageProps = {
   searchParams?: { page?: string; q?: string;};

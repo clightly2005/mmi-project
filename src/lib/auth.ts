@@ -1,10 +1,5 @@
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { FirebaseError } from "firebase/app";
-
-function isFirebaseError(error: unknown): error is FirebaseError {
-  return typeof error === "object" && error !== null && "code" in error && typeof (error as any).code === "string";
-}
-
+import { isFirebaseError } from "./firebaseErrors";
 
 export async function sendResetEmail(email: string, setMsg: (msg: string) => void) {
     const auth = getAuth();

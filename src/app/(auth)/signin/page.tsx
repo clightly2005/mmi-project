@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { FirebaseError } from  "firebase/app"
+import { isFirebaseError } from  "@/lib/firebaseErrors";
 import { getFirebaseApp } from "@/lib/firebaseClient";
 import { sendResetEmail } from "@/lib/auth";
 
@@ -18,12 +18,11 @@ export default function SignInPage() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setMsg(null)
-        function firebaseError(e: unknown): e is FirebaseError{ return typeof e === 'object' && e !== null && 'code' in e && typeof (e as any).code === 'string';}
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.push("/home");
         } catch (err: unknown){
-          if(firebaseError(err)) {
+          if(isFirebaseError(err)) {
             if(err.code === 'auth/invalid-email'){
               setMsg("The email address is not valid. Please re-enter a valid email address.");
               return;
