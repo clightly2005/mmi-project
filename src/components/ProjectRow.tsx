@@ -1,12 +1,12 @@
 "use client";
+
 import { ProjectRowProps } from "../types/projects";
 import Image from "next/image";
 import Link from "next/link";
-import { useUser }  from "../hooks/useUser";
+import { useUser } from "../hooks/useUser";
 import toast from "react-hot-toast";
 import { favProject } from "../hooks/useProjects";
 
-//helper function so always has safe page
 export function getProjectImage(type?: string) {
   switch (type) {
     case "software":
@@ -20,76 +20,96 @@ export function getProjectImage(type?: string) {
   }
 }
 
-export default function ProjectRow({
-  id, title, description, requiredSkills, durationLabel, projectType,
+export default function ProjectRow({ id, title, description, requiredSkills, durationLabel, projectType, assignedTo,
 }: ProjectRowProps) {
-  //just for the view button so admins only have this option and favorite for engineer
   const user = useUser();
- console.log("ProjectRow projectType:", projectType);
 
   async function handleFavourite(projectId: number) {
-    try{
-      if(!user) throw new Error("User not logged in");
+    try {
+      if (!user) throw new Error("User not logged in");
       await favProject(projectId, user.id);
       toast.success("Project favourited!");
-    }catch(err){
+    } catch (err) {
       console.error(err);
       toast.error((err as Error).message);
     }
   }
 
+  const isAssigned = Boolean(assignedTo);
+
   return (
-    <article className="rounded-xl border bg-white/80 p-4 shadow-sm hover:shadow-md transition">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:items-center">
- 
-        <div className="md:col-span-3">
-          <div className="flex h-28 items-center justify-center rounded-lg bg-neutral-100">
-            <Image src={getProjectImage(projectType ?? undefined)} alt={`${projectType ?? "project"} icon`} width={150} height={150} className="object-contain max-w-full max-h-full rounded-lg" />
-          </div>
-        </div>
-       
-        <div className="md:col-span-9">
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <h3 className="text-lg font-semibold">
-              <p className=" text-sky-500 ">{title}</p>
-            </h3>
-            {durationLabel && (
-              <span className="rounded-full bg-neutral-300/70 px-2 py-1 text-xs text-sky-900">
-                {durationLabel}
-              </span>
-            )}
-          </div>
+    <article className="overflow-hidden rounded-xl border bg-white/80 shadow-sm hover:shadow-md transition">
+    <div className="grid grid-cols-1 md:grid-cols-12">
+    {/* Image panel */}
+    <div className="relative h-48 md:h-auto md:col-span-3">
+      <Image src={getProjectImage(projectType ?? undefined)} alt={`${projectType ?? "project"} icon`} fill className="object-cover" sizes="(min-width: 768px) 25vw, 100vw"/>
+    </div>
 
-          <p className="mt-1 text-sm hero">{description}</p>
-
-          <div className="mt-3">
-            <div className="mb-1 text-sm font-medium hero">Required skill</div>
-            <div className="flex mt-1 flex-wrap gap-2">
-              {requiredSkills.length ? requiredSkills.map((s) => (
-                <span key={s.name} className=" font-bold inline-flex items-center hero gap-2 rounded-full bg-neutral-300/70 px-2 py-1 text-xs">
-                  {s.name}
-                  <span className="text-sky-600 px-1.5  text-[10px] ">{s.minProf}</span>
-                </span>
-              )) : (
-                <span className="text-sm text-neutral-500">None specified</span>
-              )}
-            </div>
-          </div>
-          <div className="mt-4 flex items-center gap-3">
-          {user?.role === "PM" && (
-            <Link href={`/projects/${id}`} className="text-sky-500 hover:text-sky-600 hover:underline">Assign project</Link>
-          )}
-
-          {user?.role === "ENGINEER" && (
-            <button onClick={() => handleFavourite(id)} className="rounded-full border border-yellow-500 bg-yellow-400/50 hover:bg-yellow-400/70 text-neutral-900 px-3 py-1.5 text-sm transition" aria-label="Favourite this project">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-                <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
-              </svg>
-            </button>
-          )}
-         </div>
-        </div>
+    {/* Content panel */}
+    <div className="md:col-span-9 p-4">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <h3 className="text-lg font-semibold"> <span className="text-sky-500">{title}</span> </h3>
+        {durationLabel && (
+          <span className="rounded-full bg-neutral-300/70 px-2 py-1 text-xs text-sky-900">{durationLabel}</span>
+        )}
       </div>
-    </article>
+
+      <p className="mt-1 text-sm hero">{description}</p>
+      <div className="mt-3">
+        <div className="mb-1 text-sm font-medium hero">Required skill</div>
+        <div className="flex mt-1 flex-wrap gap-2">
+          {requiredSkills.length ? (
+            requiredSkills.map((s) => (
+              <span key={s.name} className="font-bold inline-flex items-center hero gap-2 rounded-full bg-neutral-300/70 px-2 py-1 text-xs">
+                {s.name}
+                <span className="text-sky-600 px-1.5 text-[10px]"> {s.minProf}</span>
+              </span>
+            ))
+          ) : (
+            <span className="text-sm text-neutral-500">None specified</span>
+          )}
+        </div>
+
+        <p className="mt-4 text-sm font-medium hero">
+          Assigned to:{" "}
+          {assignedTo ? (
+            <span className="inline-flex items-center rounded-full bg-neutral-300/70 px-2 py-1 text-xs font-bold text-slate-900">{assignedTo} </span>
+          ) : (
+            <span className="text-neutral-500">Not assigned yet</span>
+          )}
+        </p>
+      </div>
+
+      <div className="mt-4 mt-auto flex items-center justify-between gap-3">
+        {user?.role === "PM" && (
+          <>   
+        {!isAssigned && (
+          <Link href={`/projects/${id}`} className="text-sky-500 hover:text-sky-600 mt-2 hover:underline">Assign project</Link>
+        )}
+          </>      
+        )}
+
+        {user?.role === "ENGINEER" && (
+          <>
+          {isAssigned ? ( <h1 className=" text-sm font-medium hero">This project has already been assigned to <span className="font-bold">{assignedTo}</span>. 
+            You cannot apply interest.</h1> ) : (
+            <h1 className=" text-sm font-medium hero">You can apply interest to this project using the favourite button.<br>
+            </br> <span className="text-red-700">Please Note:</span> This project requires the Beginner level <span className="">{requiredSkills[0].name} </span> skill to apply for interest. </h1>
+          )}
+          {!isAssigned && (
+          <button onClick={() => handleFavourite(id)} className="rounded-full border border-yellow-500 bg-yellow-400/50 hover:bg-yellow-400/70 text-neutral-900 px-3 py-1.5 text-sm transition" aria-label="Favourite this project">
+            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6" >
+              <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd"/>
+            </svg>
+          </button>
+          )}
+          </>
+          
+        )}
+      </div>
+    </div>
+  </div>
+</article>
+
   );
 }

@@ -21,7 +21,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode}) 
         </main>
             <footer className="mt-auto border-t border-neutral-200">
           <div className="pb-12 text-center text-xs text-neutral-500">
-            {new Date().getFullYear()} SkillSync. All rights reserved.
+            {new Date().getFullYear()} Matchitect. All rights reserved.
           </div>
         </footer>
         </AuthProvider>

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Search from "../../../components/Search";
-import ProjectsList from "../../../components/ProjectsList";
-import Pagination from "../../../components/Pagination";
+import Search from "../../../../components/Search";
+import ProjectsList from "../../../../components/ProjectsList";
+import Pagination from "../../../../components/Pagination";
 import { ProjectWithSkills } from "@/types/projects";
 
 export default function ProjectsClient({

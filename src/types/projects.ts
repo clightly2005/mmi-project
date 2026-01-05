@@ -8,6 +8,9 @@ export type ProjectWithSkills = {
         skill: { name: string },
     }[];
     projectType?: string | null;
+    projectAssignment?: {
+        user?: { name: string } | null;
+    }[] | null;
 };
 
 export type ProjectRowProps = {
@@ -17,5 +20,6 @@ export type ProjectRowProps = {
   requiredSkills: { name: string; minProf: string }[];
   durationLabel?: string;  
   projectType?: string | null;
+  assignedTo?: string | null;
 };
  

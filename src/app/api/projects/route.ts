@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { ProficiencyLevel } from "@prisma/client";
 import { prisma } from '@/lib/prismaClient'
 
@@ -9,7 +9,7 @@ function durationToWeeks(duration: string): number {
     return Number(match[1]);
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
     try{
         const body = await req.json();
         const { ownerId, title, description, duration, skillName, proficiency, projectType,

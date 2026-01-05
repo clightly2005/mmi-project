@@ -1,5 +1,5 @@
 "use client";
-
+import toast from "react-hot-toast";
 import { useState, FormEvent } from "react";
 import SelectField from "./SelectFields";
 import { useSkills } from "../hooks/useSkills";
@@ -66,9 +66,11 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
         console.error("Failed to save project:", data);
         return;
       }
+       toast.success("Project added successfully!");
       onClose();
     } catch (error) {
       console.error("Error submitting new project:", error);
+      toast.error((error as Error).message);
     }
   }
 

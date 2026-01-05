@@ -11,7 +11,7 @@ export default function ProjectsList({projects}: {projects: ProjectWithSkills[];
         <div className="space-y-4"> 
             {projects.map((project) => (
                 <ProjectRow key={project.id} id={project.id} title={project.title} description={project.description} projectType={project.projectType} durationLabel={`${project.durationWeeks} weeks`}
-                requiredSkills={project.projectSkill.map((s) => ({ name: s.skill.name, minProf: s.minLevel,}))}
+                requiredSkills={project.projectSkill.map((s) => ({ name: s.skill.name, minProf: s.minLevel,}))} assignedTo={project.projectAssignment?.[0]?.user?.name ?? null}
                 />
             ))}
              {projects.length === 0 && ( <p className="text-center text-neutral-500">No projects found.</p>)}

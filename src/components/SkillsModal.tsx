@@ -1,5 +1,5 @@
 "use client";
-
+import toast from "react-hot-toast";
 import { useState, FormEvent } from "react";
 import SelectField from "./SelectFields";
 import { useSkills } from "../hooks/useSkills";
@@ -54,9 +54,11 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
         return;
       }
       await refreshEngSkills();
+      toast.success("Skill added successfully!");
       onClose();
     } catch (error) {
       console.error("Error submitting new skill:", error);
+      toast.error((error as Error).message);
     }
   }
 

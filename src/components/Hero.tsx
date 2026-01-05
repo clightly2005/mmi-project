@@ -44,9 +44,15 @@ export default function Hero() {
               
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 {user?.role === "ENGINEER" && (
+                  <>
                   <button onClick={() => setShowSkills(true)} className="rounded-full button-primary px-5 py-2.5 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-neutral-400" >
                     Change Skill Profile
                   </button>
+                  <button  className="rounded-full button-primary px-5 py-2.5 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-neutral-400" >
+                    View Assigned Projects
+                  </button>
+                  </>
+                  
                 )}
     
                 {user?.role === "PM" && (
