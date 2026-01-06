@@ -2,16 +2,18 @@ import { NextResponse } from "next/server";
 import { Prisma} from '@prisma/client';
 import { prisma } from '@/lib/prismaClient'
 
-export async function POST(req: Request, { params}: {params: { id: string}}) {
+export async function POST(req: Request, { params}: {params: Promise<{ id: string}>}) {
     try{
-        const projectId = Number(params.id);
-        const { engineerId } = await req.json();
-        const eid = Number(engineerId);
-        if(!Number.isInteger(projectId) || !Number.isInteger(eid)){
+        const id = await params;
+        const projectId = Number(id);
+        const body = await req.json().catch(() => null);
+        const engineerId = Number(body?.engineerId);
+
+        if(!Number.isInteger(projectId) || !Number.isInteger(engineerId)){
             return NextResponse.json({ error: "Missing or invalid project/engineer ID"}, { status: 400});
         }
         try{
-            await prisma.engineerFavProject.create({ data: { projectId, engineerId: eid}, });
+            await prisma.engineerFavProject.create({ data: { projectId, engineerId: engineerId}, });
         } catch(err: unknown){
             if( err instanceof Prisma.PrismaClientKnownRequestError)
             //already favourited it
