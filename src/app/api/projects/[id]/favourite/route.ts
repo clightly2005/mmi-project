@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prismaClient'
 
 export async function POST(req: Request, { params}: {params: Promise<{ id: string}>}) {
     try{
-        const id = await params;
+        const {id} = await params;
         const projectId = Number(id);
         const body = await req.json().catch(() => null);
         const engineerId = Number(body?.engineerId);

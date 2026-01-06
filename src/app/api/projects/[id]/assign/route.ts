@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prismaClient";
 
 export async function POST( req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params; 
-  console.log("ASSIGN params id =", id);
 
   const projectId = Number(id);
   if (!Number.isInteger(projectId)) {
@@ -11,16 +10,16 @@ export async function POST( req: Request, { params }: { params: Promise<{ id: st
   }
 
   const body = await req.json().catch(() => null);
-  const userId = Number(body?.userId);
+  const engineerId = Number(body?.engineerId);
 
-  if (!Number.isInteger(userId)) { return NextResponse.json({ error: "Invalid userId" }, { status: 400 });}
+  if (!Number.isInteger(engineerId)) { return NextResponse.json({ error: "Invalid engineerId" }, { status: 400 });}
 
   const now = new Date();
 
   const assignment = await prisma.projectAssignment.create({
     data: {
       projectId,
-      userId,
+      userId: engineerId,
       startDate: now,
       endDate: now,
     },
