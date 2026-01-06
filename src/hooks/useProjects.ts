@@ -1,10 +1,10 @@
 
 
 export async function favProject(projectId: number, engineerId: number) {
-  const res = await fetch("/api/projects/favourite", {
+  const res = await fetch(`/api/projects/${projectId}/favourite`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ projectId, engineerId }),
+    body: JSON.stringify({engineerId }),
   });
 
   const data = await res.json().catch(() => ({}));
