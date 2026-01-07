@@ -65,7 +65,7 @@ export default function SignUpPage() {
                   Please enter your Email address
                 </label>
                 <div className="mt-2">
-                  <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} 
+                  <input type="email" value={email}  spellCheck={false} autoCapitalize="none" autoCorrect="off" onChange={(e)=>setEmail(e.target.value)} 
                     className="block w-full rounded-md px-3 py-1.5 text-base outline-1 -outline-offset-1 focus:outline-sky-600 sm:text-sm/6 dark:bg-blue-900/5 dark:text-blue-950 dark:outline-blue-600/20 dark:focus:outline-sky-500"/>
                 </div>
               </div>
@@ -75,7 +75,7 @@ export default function SignUpPage() {
                   Please create a Password
                 </label>
                 <div className="mt-2">
-                  <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}
+                  <input type="password" value={password} spellCheck={false} autoCorrect="off" onChange={(e)=>setPassword(e.target.value)}
                     className="block w-full rounded-md  px-3 py-1.5 text-base outline-1 -outline-offset-1  focus:outline-sky-600 sm:text-sm/6 dark:bg-blue-900/5 dark:text-white dark:outline-blue-600/20 dark:focus:outline-sky-500"/>  
                 </div>
                 {msg && <p className="text-red-800 dark:text-red-800 text-sm mt-1">{msg}</p>}
