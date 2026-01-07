@@ -38,15 +38,19 @@ export function AuthProvider(props: { children: React.ReactNode}) {
         return () => unsubscribe(); //stop listening we=hen provider unmounts
     }, [auth]);
 
-    //auth helpers so every one of the components that need to  can user these
+    //auth helpers so every one of the components that need to  can use these
+    function normalisedEmail(email: string) {
+        return email.trim().toLowerCase();
+    }
+
     async function signIn(email: string, password: string){
         const { signInWithEmailAndPassword } = await import("firebase/auth");
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, normalisedEmail(email), password);
     }
 
     async function signUp(email: string, password: string) {
         const { createUserWithEmailAndPassword } = await import("firebase/auth");
-        await createUserWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(auth, normalisedEmail(email), password);
     }
 
     async function signOut() {
