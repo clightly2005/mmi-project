@@ -6,11 +6,12 @@ import { prisma } from '@/lib/prismaClient'
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = Number(searchParams.get("userId"));
-    if(!userId) return NextResponse.json({ error: "Missing userId parameter" });
+    if(!userId) return NextResponse.json({ error: "Missing userId parameter" },  { status: 400 });
 
     const assignments = await prisma.projectAssignment.findMany({
         where: { userId},
-        select: {id: true, endDate: true, project: { select: { title: true, durationWeeks: true } } },
+        orderBy: { startDate: "asc" },
+        select: {id: true, startDate: true,endDate: true, project: { select: { title: true, durationWeeks: true } } },
     });
     return NextResponse.json(assignments);
 }

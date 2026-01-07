@@ -2,9 +2,9 @@
 import toast from "react-hot-toast";
 import { useState, FormEvent } from "react";
 import SelectField from "./SelectFields";
-import { useSkills } from "../hooks/useSkills";
-import { useUser } from "../hooks/useUser";
-import { useEngSkills } from "../hooks/useEngSkills";
+import { useSkills } from "@/hooks/useSkills";
+import { useUser } from "@/hooks/useUser";
+import { useEngSkills } from "@/hooks/useEngSkills";
 
 export default function ProjectModal({ onClose }: { onClose: () => void }) {
 
@@ -41,6 +41,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
     try {
       const res = await fetch("/api/engineer-skill", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user.id,
           skillName: String(skill),

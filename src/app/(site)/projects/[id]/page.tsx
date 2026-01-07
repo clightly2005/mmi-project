@@ -11,8 +11,8 @@ const SCORE = {
 
 type ProficiencyLevel = keyof typeof SCORE;
 
-export default async function ProjectPage( { params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function ProjectPage( { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   const projectId = Number(id);
   if (!Number.isInteger(projectId)) { return <div className="max-w-5xl mx-auto px-4 py-6">Invalid project ID</div>;}

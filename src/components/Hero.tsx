@@ -2,15 +2,17 @@
 //conditionally renders text and modals depending on role assigned to a users account 
 import SkillsModal from "./SkillsModal";
 import ProjectModal from "./ProjectModal";
+import AssignedModal from "./AssignedModal";
 import Image from "next/image";
 import {  useState } from "react";
-import { useUser }  from "../hooks/useUser";
+import { useUser }  from "@/hooks/useUser";
 
 export default function Hero() {
     const user = useUser();
 
     const [showSkills, setShowSkills] = useState(false);
     const [showProject, setShowProject] = useState(false);
+    const [showAssigned, setShowAssigned] = useState(false);
 
     if (user === null) return 
     <div role="status">
@@ -48,7 +50,7 @@ export default function Hero() {
                   <button onClick={() => setShowSkills(true)} className="rounded-full button-primary px-5 py-2.5 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-neutral-400" >
                     Change Skill Profile
                   </button>
-                  <button  className="rounded-full button-primary px-5 py-2.5 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-neutral-400" >
+                  <button onClick={() => setShowAssigned(true)} className="rounded-full button-primary px-5 py-2.5 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-neutral-400" >
                     View Assigned Projects
                   </button>
                   </>
@@ -76,6 +78,7 @@ export default function Hero() {
         
         {showSkills && <SkillsModal onClose={() => setShowSkills(false)} />}
         {showProject && <ProjectModal onClose={() => setShowProject(false)} />}
+        {showAssigned && <AssignedModal onClose={() => setShowAssigned(false)} />}
         </>
     );
 }

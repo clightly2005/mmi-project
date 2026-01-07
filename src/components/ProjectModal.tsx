@@ -2,8 +2,9 @@
 import toast from "react-hot-toast";
 import { useState, FormEvent } from "react";
 import SelectField from "./SelectFields";
-import { useSkills } from "../hooks/useSkills";
-import { useUser } from "../hooks/useUser";
+import { useSkills } from "@/hooks/useSkills";
+import { useUser } from "@/hooks/useUser";
+
 
 
 
@@ -50,6 +51,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
     try {
       const res = await fetch("/api/projects", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ownerId: user.id,
           title,
