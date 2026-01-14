@@ -62,7 +62,7 @@ export default function SignInPage() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 sm:rounded-lg rounded-md sm:px-12 dark:bg-blue-400/25 dark:shadow-xl dark:outline dark:-outline-offset-1 dark:outline-black/10">
-            <form onSubmit={handleSignin} className="py-4 space-y-3">//support pressing enter
+            <form onSubmit={handleSignin} className="py-4 space-y-3">
               <div>
                 <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 dark:text-blue-950">
                   Email address
