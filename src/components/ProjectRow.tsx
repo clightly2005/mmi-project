@@ -39,7 +39,6 @@ export default function ProjectRow({ id, title, description, requiredSkills, dur
   }
 
   const isAssigned = Boolean(assignedTo);
-
   return (
     <article className="overflow-hidden rounded-xl border bg-white/80 shadow-sm hover:shadow-md transition">
     <div className="grid grid-cols-1 md:grid-cols-12">
@@ -71,8 +70,6 @@ export default function ProjectRow({ id, title, description, requiredSkills, dur
             <span className="text-sm text-neutral-500">None specified</span>
           )}
         </div>
-
-        
       </div>
       <div className="mt-4 mt-auto flex items-center justify-between gap-3">
         {user?.role === "PM" && (

@@ -62,8 +62,8 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
       });
 
       if (!res.ok) {
-        const data = await res.json().catch(() =>({}));
-        console.error("Failed to save project:", data);
+        const project = await res.json().catch(() =>({}));
+        console.error("Failed to save project:", project);
         return;
       }
        toast.success("Project added successfully!");

@@ -25,19 +25,14 @@ export default function Pagination({ page, totalPages, totalResults, q = "" }: P
     if (totalPages > 1) {
       pages.push(totalPages);
     }
-    // Remove duplicates and sort
     return [...new Set(pages)].sort((a, b) => a - b);
   };
 
   const pages = createPageNumbers();
-
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
-      
       <p className="hidden md:block text-sm text-slate-900 mb-3 sm:mb-0">
-        Showing{" "}<strong>{(page - 1) * 10 + 1}</strong>{" "}
-        to{" "}<strong> {Math.min(page * 10, totalResults)} </strong>{" "}
-        of <strong>{totalResults}</strong> results
+        Showing{" "}<strong>{(page - 1) * 10 + 1}</strong>{" "} to{" "}<strong> {Math.min(page * 10, totalResults)} </strong>{" "} of <strong>{totalResults}</strong> results
       </p>
 
       <nav className="isolate inline-flex -space-x-px rounded-md shadow-xs dark:shadow-none">
@@ -46,7 +41,6 @@ export default function Pagination({ page, totalPages, totalResults, q = "" }: P
           <span className="sr-only">Previous</span>
           <ChevronLeftIcon className="h-5 w-5" />
         </Link>
-
         {pages.map((p, i) => {
           const showEllipsis = i > 0 && p - pages[i - 1] > 1;
           return (

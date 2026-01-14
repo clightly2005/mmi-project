@@ -11,7 +11,7 @@ export async function POST(req: Request, { params}: {params: Promise<{ id: strin
         const engineerId = Number(body?.engineerId);
 
         if(!Number.isInteger(projectId) || !Number.isInteger(engineerId)){
-            return NextResponse.json({ error: "Missing or invalid project/engineer ID"}, { status: 400});
+            return NextResponse.json({ error: "Missing or invalid project/engineer id"}, { status: 400});
         }
         try{
             await prisma.engineerFavProject.create({ data: { projectId, engineerId: engineerId}, });

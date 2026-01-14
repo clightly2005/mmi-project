@@ -8,3 +8,9 @@ export type EngSkill = {
         name: string;
     };
 };
+
+export type EngineerSkillWithSkill = {
+    id: number;
+    proficiency: string;
+    skill:{ id: number; name: string; };
+};

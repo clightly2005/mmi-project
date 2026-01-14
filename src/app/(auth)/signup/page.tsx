@@ -12,17 +12,14 @@ export default function SignUpPage() {
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState<string | null>(null);
 
-    async function handleSubmit(e: React.FormEvent) {
+    async function handleSignup(e: React.FormEvent) {
       e.preventDefault();
       setMsg(null);
-     
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
-        //proving identity so user cant fake a token (cryptographically signed by firebase)
+        //proving identity so user cant fake a token
         const token = await user.getIdToken();
-
         //sends token 
         await fetch("/api/users", {
           method: "POST", headers: {"Authorization": `Bearer ${token}` },
@@ -32,19 +29,24 @@ export default function SignUpPage() {
       } 
       catch (err: unknown){
         if(isFirebaseError(err)){
-        if(err.code === 'auth/email-already-in-use'){
-          setMsg("This email is already in use. Please sign in instead.");
+          switch(err.code){
+            case "auth/email-already-in-use":
+              setMsg("This email is already in use. Please sign in instead");
+              break;
+            case "auth/invalid-email":
+              setMsg("This email is not a valid address, Please try again");
+              break;
+            case "auth/weak-password":
+              setMsg("The password entered is too weak. Please re enter a stronger password that is more than 6 chars");
+              break;
+          }
           return;
         }
-        if(err.code === 'auth/invalid-email'){
-          setMsg("The email address is not valid. Please re-enter a valid email address.");
-          return;
+        if (err instanceof Error){
+          setMsg(err.message)
+        } else{
+          setMsg("Unexpected error occured. Please try again");
         }
-        if(err.code === 'auth/weak-password'){
-          setMsg("The password is too weak. Please re-enter a stronger password that is more than 6 chars long.");
-          return;
-        }    
-       }
       }
     }
 
@@ -60,7 +62,7 @@ export default function SignUpPage() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 sm:rounded-lg rounded-md sm:px-12 dark:bg-blue-400/25 dark:shadow-xl dark:outline dark:-outline-offset-1 dark:outline-black/10">
-            <form onSubmit={handleSubmit} className="py-4 space-y-3">
+            <form onSubmit={handleSignup} className="py-4 space-y-3">
               <div>
                 <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 dark:text-blue-950">
                   Please enter your Email address

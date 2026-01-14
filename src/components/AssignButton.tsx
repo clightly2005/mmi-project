@@ -14,7 +14,7 @@ export function AssignButton({ projectId, userId, userName }: {
   async function handleAssign() {
     try {
       setLoading(true);
-      
+    
       console.log("Assign:", { projectId, userId });
       const res = await fetch(`/api/projects/${projectId}/assign`, {
         method: "POST",

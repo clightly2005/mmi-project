@@ -9,28 +9,26 @@ export function useUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Subscribe to auth state changes
+    //auth state change
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
       if (!firebaseUser) {
         setUser(null);
         setLoading(false);
         return;
       }
-
-      // Now Firebase is ready, get the token
+      //get token
       const token = await firebaseUser.getIdToken();
-
       const res = await fetch("/api/auth/sync", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = await res.json();
-      setUser(data); // assuming your API returns the plain user object
+      const ur = await res.json();
+      setUser(ur);
       setLoading(false);
     });
 
-    return () => unsubscribe(); // cleanup listener
+    return () => unsubscribe(); 
   }, []);
 
   return loading ? null : user;

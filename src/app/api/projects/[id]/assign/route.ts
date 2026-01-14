@@ -13,7 +13,7 @@ export async function POST( req: Request, { params }: { params: Promise<{ id: st
 
   const projectId = Number(id);
   if (!Number.isInteger(projectId)) {
-    return NextResponse.json( { error: `Invalid project id (got: ${String(id)})` },{ status: 400 });
+    return NextResponse.json( { error: `Invalid project id` },{ status: 400 });
   }
 
   const body = await req.json().catch(() => null);
@@ -21,24 +21,16 @@ export async function POST( req: Request, { params }: { params: Promise<{ id: st
   if (!Number.isInteger(engineerId)) { return NextResponse.json({ error: "Invalid engineerId" }, { status: 400 });}
 
   //get project duration
-  const project =  await prisma.project.findUnique({
-    where: { id: projectId },
-    select: { durationWeeks: true },
-  });
+  const project =  await prisma.project.findUnique({ where: { id: projectId }, select: { durationWeeks: true },});
   if (!project) { return NextResponse.json({ error: "Project not found" }, { status: 404 }); }
 
   const durationWeeks = Number(project.durationWeeks);
   if(!Number.isInteger(durationWeeks) || durationWeeks <= 0){ return NextResponse.json({ error: "Invalid project duration" }, { status: 400 }); }
-
   //engineers most recent assignment for stacking availability
-  const last = await prisma.projectAssignment.findFirst({
-    where: { userId: engineerId }, orderBy: { endDate: "desc" }, select: { endDate: true },
-  });
-
+  const last = await prisma.projectAssignment.findFirst({ where: { userId: engineerId }, orderBy: { endDate: "desc" }, select: { endDate: true },});
   const now = new Date();
   const startDate = last?.endDate && last.endDate > now ? last.endDate : now;
   const endDate = addWeeks(startDate, durationWeeks);
-
   const assignment = await prisma.projectAssignment.create({
     data: {
       projectId,

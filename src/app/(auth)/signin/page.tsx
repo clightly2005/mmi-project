@@ -16,35 +16,42 @@ export default function SignInPage() {
     const [msg, setMsg] = useState<string | null>(null);
 
     
-    async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        setMsg(null)
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            router.push("/home");
-        } catch (err: unknown){
-          if(isFirebaseError(err)) {
-            if(err.code === 'auth/invalid-email'){
-              setMsg("The email address is not valid. Please re-enter a valid email address.");
-              return;
-            }
-            if(err.code === 'auth/weak-password'){
-              setMsg("The password is too weak. Please re-enter a stronger password that is more than 6 chars long.");
-              return;
-            }   
-            if(err.code === 'auth/user-not-found'){   
-              setMsg("No account found with this email. Please sign up first.");
-              return;
-            }
-          // Fallback for other Firebase auth codes
-          setMsg(err.message || 'An unexpected authentication error occurred.');
-          return;
+    async function handleSignin(e: React.FormEvent) {
+      e.preventDefault();
+      setMsg(null)
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        router.push("/home");
+      } catch (err: unknown){
+        //narrowing to firebase errors from lib file
+        if(isFirebaseError(err)) {
+          switch(err.code){
+            case "auth/invalid-email": 
+              setMsg("The email address is not valid. Please re enter a valid address");
+              break;
+            case "auth/weak-password":
+              setMsg("The passwored entered is too weak. Please re-enter a stronger password - more than 6 chars");
+              break;
+            case "auth/user-not-found":
+              setMsg("No account found with this email address. If you have not used Matchitect before, please sign up below");
+              break;
+            default:
+              setMsg(err.message)
+          }
+          return;//prev hitting fallback regardless
+        }
+        //fallback 
+        if (err instanceof Error){
+          setMsg(err.message)
+        } else{
+          setMsg("Unexpected error occured. Please try again");
+        }
       }
     }
-  }
-    
+   
+     
     return (
-        <div className="flex  min-h-full flex-col justify-center py-12 sm:px-6 lg:px-20">
+      <div className="flex  min-h-full flex-col justify-center py-12 sm:px-6 lg:px-20">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image alt="Skill sync" src="/logo.png" width={300} height={200}  className="mx-auto h-20 w-auto not-dark:hidden" />
           <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-sky-400">Matchitect</h1>
@@ -55,7 +62,7 @@ export default function SignInPage() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 sm:rounded-lg rounded-md sm:px-12 dark:bg-blue-400/25 dark:shadow-xl dark:outline dark:-outline-offset-1 dark:outline-black/10">
-            <form onSubmit={handleSubmit} className="py-4 space-y-3">
+            <form onSubmit={handleSignin} className="py-4 space-y-3">//support pressing enter
               <div>
                 <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 dark:text-blue-950">
                   Email address
@@ -96,9 +103,8 @@ export default function SignInPage() {
            </p>
           </div>
         </div>
-      </div>
-
-    );
+    </div>
+  );
 }
 
 

@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react";
+import { Assignment } from "@/types/assignment"
 //custom hook to fetch logged in user project assignments from API route and gives states to component to use
-
-//types set for the expected API return so runtime mistakes are reduced
-export type Assignment = {
-  id: number;
-  startDate: string;
-  endDate: string;
-  project: {
-    title: string;
-    durationWeeks: number;
-  };
-};
 
 export function useAssignments(userId?: number) {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -26,10 +16,10 @@ export function useAssignments(userId?: number) {
 
         //queries assignmenets for authorised user and returns json
         const res = await fetch(`/api/project-assignment?userId=${userId}`);
-        const data = await res.json().catch(() => null);
-        if (!res.ok) throw new Error(data?.error ?? `HTTP ${res.status}`);
+        const assign = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(assign?.error ?? `HTTP ${res.status}`);
 
-        setAssignments(data as Assignment[]);
+        setAssignments(assign as Assignment[]);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {

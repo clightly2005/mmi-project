@@ -2,17 +2,41 @@ import { prisma } from "@/lib/prismaClient";
 import { AssignButton } from "@/components/AssignButton";
 
 //page for when an individual project is pressed to assign it to a user.
-//I need to refactor this so that it grabs a table componenent as it is too large
-const SCORE = {
+//I need to refactor this so that it grabs a table componenent and put the types in type dir as it is too large
+
+//maps proficiency to numbers for ranking the engineers
+const PROF_SCORE = {
   BEGINNER: 1,
   NOVICE: 2,
   INTERMEDIATE: 3,
   ADVANCED: 4,
   EXPERT: 5,
 } as const;
+type ProficiencyLevel = keyof typeof PROF_SCORE;
 
-type ProficiencyLevel = keyof typeof SCORE;
+type EngineerSkillRow = {
+  proficiency: string;
+  user:{ id: number; name: string; email: string;};
+};
 
+//function to rank engineers
+function rankEngineers(rows:  EngineerSkillRow[]) {
+  return rows.map((row) => {
+    const proficiency = row.proficiency as ProficiencyLevel;
+    return{
+        userId: row.user.id,
+        name: row.user.name,
+        email: row.user.email,
+        proficiency,
+        score: PROF_SCORE[proficiency],
+      }
+    }).sort((a, b) => {
+      if(b.score !== a.score) return b.score - a.score;
+      return a.name.localeCompare(b.name);
+    });
+}
+  
+  
 export default async function ProjectPage( { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
@@ -28,32 +52,18 @@ export default async function ProjectPage( { params }: { params: Promise<{ id: s
           skill: { select: { name: true } },},},
     },
   });
-
   if (!project) { return <div className="max-w-5xl mx-auto px-4 py-6">Project not found</div>;}
 
-  const mainSkill = project.projectSkill[0];
-
   //gets any engineers in db with a skill matching main skill to the project id currently being viewed
+  const mainSkill = project.projectSkill[0];
   const recommendedRows = mainSkill ? await prisma.engineerSkill.findMany({
-        where: { skillId: mainSkill.skillId, user: { role: "ENGINEER" },},
-        select: { proficiency: true, user: { select: { id: true, name: true, email: true } }, },
-      })
-    : [];
-
+    where: { skillId: mainSkill.skillId, user: { role: "ENGINEER"},},
+      select:{proficiency: true, user: {select: {id:true, name: true, email:true},},
+    },
+  }) : [];
   //Rank by the proficiency level
-  const recommended = recommendedRows.map((row) => {
-      const proficiency = row.proficiency as ProficiencyLevel;
-      return {
-        userId: row.user.id,
-        name: row.user.name,
-        email: row.user.email,
-        proficiency,
-        score: SCORE[proficiency],
-      };
-    }).sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return a.name.localeCompare(b.name);
-    });
+   const recommended = rankEngineers(recommendedRows);
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">

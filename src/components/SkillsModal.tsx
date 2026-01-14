@@ -50,8 +50,8 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        console.error("Failed to save engineer skill: ", data);
+        const skilld = await res.json();
+        console.error("Failed to save engineer skill: ", skilld);
         return;
       }
       await refreshEngSkills();

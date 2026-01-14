@@ -6,9 +6,9 @@ export async function favProject(projectId: number, engineerId: number) {
     body: JSON.stringify({engineerId }),
   });
 
-  const data = await res.json().catch(() => ({}));
+  const proj = await res.json().catch(() => ({}));
 
-  if (!res.ok) { throw new Error(data?.error ?? `HTTP ${res.status}`);}
+  if (!res.ok) { throw new Error(proj?.error ?? `HTTP ${res.status}`);}
 
-  return data;
+  return proj;
 }

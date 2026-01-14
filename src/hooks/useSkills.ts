@@ -10,9 +10,9 @@ export function useSkills() {
         async function fetchSkill(){
             const res = await fetch("/api/skills", { method: "GET",});
 
-            const data = await res.json();
-            setSkill(data);
-            console.log(data);
+            const skillu = await res.json();
+            setSkill(skillu);
+            console.log(skillu);
         }
         fetchSkill();
     }, []);

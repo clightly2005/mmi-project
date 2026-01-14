@@ -35,7 +35,7 @@ export function AuthProvider(props: { children: React.ReactNode}) {
         return () => unsubscribe(); //stop listening we=hen provider unmounts
     }, [auth]);
 
-    //auth helpers so every one of the components that need to  can use these
+    
     function normalisedEmail(email: string) {
         return email.trim().toLowerCase();
     }
