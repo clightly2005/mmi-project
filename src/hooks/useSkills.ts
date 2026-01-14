@@ -1,7 +1,7 @@
 "use client";
-
+//hook for skill modal to get skill data
 import { useState, useEffect } from "react";
-import { Skill } from "../types/skills";
+import { Skill } from "@/types/skills";
 
 export function useSkills() {
     const [skill, setSkill] = useState<Skill[]> ([]);

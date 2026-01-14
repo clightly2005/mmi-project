@@ -6,8 +6,8 @@ import { useSkills } from "@/hooks/useSkills";
 import { useUser } from "@/hooks/useUser";
 import { useEngSkills } from "@/hooks/useEngSkills";
 
+//for when an engineer opens the add a skill button
 export default function ProjectModal({ onClose }: { onClose: () => void }) {
-
   //account data - readonly
   const user = useUser();
 
@@ -18,7 +18,7 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
   const { skills: engSkills, refresh: refreshEngSkills } = useEngSkills( user?.id );
   const hasEngSkills = !!engSkills?.length;
 
-  //role data - readonly 
+  //role data 
   const roleName = user?.engineerRole?.name ?? "Not assigned";
 
   //proficiency data for what skill level u have in the selected skill
@@ -62,7 +62,6 @@ export default function ProjectModal({ onClose }: { onClose: () => void }) {
       toast.error((error as Error).message);
     }
   }
-
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  border border-white/10 shadow-2xl backdrop-blur.">

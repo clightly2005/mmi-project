@@ -1,6 +1,6 @@
-//this is my server component to render the home page shell 
+//this is my server component to render the home page shell - mainly gets display from the hero component
 
-import Hero from "../../../components/Hero"
+import Hero from "@/components/Hero"
 
 export default function Home() {
   return (

@@ -1,6 +1,7 @@
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { isFirebaseError } from "./firebaseErrors";
 
+//used for when a user needs a password reset to gain access to their account again since a password has been forgotten.
 export async function sendResetEmail(email: string, setMsg: (msg: string) => void) {
     const auth = getAuth();
   try {

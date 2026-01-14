@@ -5,6 +5,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirebaseApp } from "@/lib/firebaseClient";
 import { isFirebaseError} from '@/lib/firebaseErrors'
 
+//sign up page a user ill hit if they press sign up on the sign in page
 export default function SignUpPage() {
     const auth = getAuth(getFirebaseApp());
     const [email, setEmail] = useState("");

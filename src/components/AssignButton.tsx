@@ -1,8 +1,8 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+//button for the projects [id] page when a PM assigns a engineer 
 export function AssignButton({ projectId, userId, userName }: {
   projectId: number;
   userId: number;
@@ -26,7 +26,7 @@ export function AssignButton({ projectId, userId, userName }: {
         const data = await res.json().catch(() => null);
         throw new Error(data?.error ?? "Failed to assign engineer");
       }
-      router.refresh(); //rerender
+      router.refresh();
     } catch (err) {
       console.error(err);
       alert((err as Error).message);

@@ -7,6 +7,7 @@ import { isFirebaseError } from  "@/lib/firebaseErrors";
 import { getFirebaseApp } from "@/lib/firebaseClient";
 import { sendResetEmail } from "@/lib/auth";
 
+//sign in page a user hits initially
 export default function SignInPage() {
     const router = useRouter();
     const auth = getAuth(getFirebaseApp());

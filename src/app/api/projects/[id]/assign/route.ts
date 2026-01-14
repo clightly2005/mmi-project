@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prismaClient";
 
-//helper func for sho start date and computing estimated end date
+//helper func for start date and computing estimated end date
 function addWeeks(date: Date, weeks: number) {
   const d = new Date(date);
   d.setDate(d.getDate() + weeks * 7);

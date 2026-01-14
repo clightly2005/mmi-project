@@ -1,5 +1,4 @@
 //api endpoint to return users project assignments to compute availability
-
 import { NextResponse } from "next/server";
 import { prisma } from '@/lib/prismaClient'
 

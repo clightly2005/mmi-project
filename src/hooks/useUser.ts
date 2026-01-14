@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { auth } from "../lib/firebaseClient";
-import { User } from "../types/user";
+import { auth } from "@/lib/firebaseClient";
+import { User } from "@/types/user";
 
+//for alot of the application this hook helps with getting the current user logged in with firebase credentials
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);

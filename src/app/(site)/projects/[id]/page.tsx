@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prismaClient";
 import { AssignButton } from "@/components/AssignButton";
 
+//page for when an individual project is pressed to assign it to a user.
+//I need to refactor this so that it grabs a table componenent as it is too large
 const SCORE = {
   BEGINNER: 1,
   NOVICE: 2,

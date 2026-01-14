@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-
+//hook for getting engineer's skills for the skill modal so they can see what has been assigned already. 
+//also used for the project assignment
 export type EngineerSkillWithSkill = {
     id: number;
     proficiency: string;

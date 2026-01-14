@@ -7,7 +7,8 @@ import { useUser } from "@/hooks/useUser";
 import toast from "react-hot-toast";
 import { favProject } from "@/hooks/useProjects";
 
-
+//for showing different images based on the project focus area - software, networks or general tech. 
+//I want to have more for databases or risk assements/ security etc so need to add them in the public dir
 export function getProjectImage(type?: string) {
   switch (type) {
     case "software":
@@ -25,6 +26,7 @@ export default function ProjectRow({ id, title, description, requiredSkills, dur
 }: ProjectRowProps) {
   const user = useUser();
 
+  //toast pop up to display output, uses fav project  from hook
   async function handleFavourite(projectId: number) {
     try {
       if (!user) throw new Error("User not logged in");
@@ -41,12 +43,11 @@ export default function ProjectRow({ id, title, description, requiredSkills, dur
   return (
     <article className="overflow-hidden rounded-xl border bg-white/80 shadow-sm hover:shadow-md transition">
     <div className="grid grid-cols-1 md:grid-cols-12">
-    {/* Image panel */}
     <div className="relative h-48 md:h-auto md:col-span-3">
       <Image src={getProjectImage(projectType ?? undefined)} alt={`${projectType ?? "project"} icon`} fill className="object-cover" sizes="(min-width: 768px) 25vw, 100vw"/>
     </div>
 
-    {/* Content panel */}
+    {/*content panel */}
     <div className="md:col-span-9 p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <h3 className="text-lg font-semibold"> <span className="text-sky-500">{title}</span> </h3>

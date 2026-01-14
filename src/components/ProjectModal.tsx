@@ -5,11 +5,9 @@ import SelectField from "./SelectFields";
 import { useSkills } from "@/hooks/useSkills";
 import { useUser } from "@/hooks/useUser";
 
-
-
-
+//need to refactor all 3 modal components as i am repeating too much code! - come back to this
+//modal that opens when a PM presses add a project
 export default function ProjectModal({ onClose }: { onClose: () => void }) {
-
   //account data - readonly
   const user = useUser();
 

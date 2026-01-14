@@ -1,5 +1,5 @@
 import ProjectCardSkeleton from "@/components/ProjectCardSkeleton";
-//just when projects are loading from DB to show skeleton
+//for when when projects are loading from DB to show the user a skeleton so they know it hasnt frozen
 export default function Loading() {
   return (
     <div className="space-y-4 max-w-6xl mx-auto p-8">

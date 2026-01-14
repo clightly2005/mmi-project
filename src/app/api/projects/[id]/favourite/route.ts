@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Prisma} from '@prisma/client';
 import { prisma } from '@/lib/prismaClient'
 
+//route for when an engineer favourites a project. this needs to be added into the algorithm that matches engineers or have a notificationt os ay you must add this skill as a beginner atleast to fav it
 export async function POST(req: Request, { params}: {params: Promise<{ id: string}>}) {
     try{
         const {id} = await params;

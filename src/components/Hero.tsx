@@ -1,5 +1,4 @@
 "use client";
-//conditionally renders text and modals depending on role assigned to a users account 
 import SkillsModal from "./SkillsModal";
 import ProjectModal from "./ProjectModal";
 import AssignedModal from "./AssignedModal";
@@ -7,6 +6,9 @@ import Image from "next/image";
 import {  useState } from "react";
 import { useUser }  from "@/hooks/useUser";
 
+//conditionally renders text and modals depending on role assigned to a users account on the homepage
+//engineer has skill modal to add skils and view modal to view assigned projects
+//PM has project modal to add projects 
 export default function Hero() {
     const user = useUser();
 
@@ -56,15 +58,12 @@ export default function Hero() {
                   </>
                   
                 )}
-    
                 {user?.role === "PM" && (
                   <button onClick={() => setShowProject(true)}
                     className="rounded-full button-primary px-5 py-2.5 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-neutral-400">
                     Create a New Project
                   </button>
                 )}
-    
-            
               </div>
             </div>
     

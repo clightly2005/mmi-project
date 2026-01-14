@@ -1,8 +1,8 @@
-// src/app/api/users/route.ts
+
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
-import { getAdminApp } from "../../../lib/firebaseAdmin";
+import { getAdminApp } from "@/lib/firebaseAdmin";
 
 const prisma = new PrismaClient();
 
@@ -94,11 +94,7 @@ export async function GET(req: NextRequest) {
     where: { firebaseUid: decoded.uid },
     include: {
       engineerRole: true,
-      engineerSkill: {
-        include: {
-          skill: true,
-        },
-      },
+      engineerSkill: { include: { skill: true, },},
     },
   });
   //return user as json

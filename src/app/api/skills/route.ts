@@ -1,9 +1,7 @@
-//using prisma to write /read from mysql
+//using prisma to write /read 
 
 import { NextResponse } from 'next/server';
-
 import { prisma } from '@/lib/prismaClient'
-
 
 //for getting skills from skill table
 export async function GET(){

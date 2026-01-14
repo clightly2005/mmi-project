@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prismaClient";
 import ProjectsClient from "./(list)/projectClient";
 
+//this server component fetches for one page of 10 projects, and passes to proj client to display.
+//I need to change it so that search is not a client comp as currently since onyl 10 projects are passed te sreach can filter on jsut those at any one time
 
 //helper function to always get a safe page number
 function parsePage(page?: string | string[]) {
@@ -9,21 +11,20 @@ function parsePage(page?: string | string[]) {
   return Number.isFinite(num) && num > 0 ? num : 1;
 }
 
-type ProjectsPageProps = {
-  searchParams?: Promise<{ page?: string; q?: string }>;
-};
+type ProjectsPageProps = { searchParams?: Promise<{ page?: string; q?: string }>; };
+
 export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
   const limit = 10;
   const sp = await searchParams;
   const page = parsePage(sp?.page);
   const query = sp?.q ?? "";
 
-
   const totalResults = await prisma.project.count();
   const totalPages = Math.max(1, Math.ceil(totalResults / limit));
 
   const safePage = Math.min(page, totalPages);
   const skip = (safePage - 1) * limit;
+  //fetch records for this page and newest projects come first 
   const projects = await prisma.project.findMany({ skip, take: limit,
       orderBy: { createdAt: "desc" },
       select: { id: true, title: true, description: true, durationWeeks: true, projectType: true,

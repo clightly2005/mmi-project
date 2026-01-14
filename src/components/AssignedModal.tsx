@@ -1,6 +1,7 @@
-import { useUser } from "../hooks/useUser";
-import { useAssignments } from "../hooks/useAssignment";
+import { useUser } from "@/hooks/useUser";
+import { useAssignments } from "@/hooks/useAssignment";
 
+//for an engineer to see the projects that are currently assigned to them. It uses the start and end date data to stack projects if there is more than one 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
   if(Number.isNaN(d.getTime())) return dateStr;
@@ -17,7 +18,6 @@ export default function AssignedModal({ onClose }: { onClose: () => void }){
                  <div className="p-6">
                     <div className="flex items-start justify-between">
                       <h2 className="mb-1 text-xl font-semibold text-white"> Assigned Projects</h2>
-                     
                     </div>
                  
               <p className="mt-2 text-sm text-white/70"> Projects currently assigned to you: </p>
@@ -29,22 +29,22 @@ export default function AssignedModal({ onClose }: { onClose: () => void }){
                 ) : assignments.length === 0 ? (
                     <p className="text-white">You have no assigned projects.</p>
                 ) : (
-                    <ul className="space-y-3">
-                        {assignments.map((assignment) => (
-                            <li key={assignment.id} className="rounded border border-white/10 bg-neutral-900/80 p-4">
-                              <p className="text-sm text-white/70">Project</p>
-                              <p className="font-medium text-white">{assignment.project.title}</p>
-                                <div className="mt-4 grid grid-cols-2 gap-4">
-                                  <div>
-                                    <p className="text-sm text-white/70">Start date</p>
-                                    <p className="text-sm text-white">{formatDate(assignment.startDate)}</p>
-                                  </div>  
-                                  <div className="text-right">
-                                    <p className="text-sm text-white/70">End date</p>
-                                    <p className="text-sm text-white"> {formatDate(assignment.endDate)}</p>
-                                  </div>  
-                    </div>
-                  </li>
+                  <ul className="space-y-3">
+                    {assignments.map((assignment) => (
+                      <li key={assignment.id} className="rounded border border-white/10 bg-neutral-900/80 p-4">
+                        <p className="text-sm text-white/70">Project</p>
+                        <p className="font-medium text-white">{assignment.project.title}</p>
+                        <div className="mt-4 grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-white/70">Start date</p>
+                            <p className="text-sm text-white">{formatDate(assignment.startDate)}</p>
+                          </div>  
+                          <div className="text-right">
+                            <p className="text-sm text-white/70">End date</p>
+                            <p className="text-sm text-white"> {formatDate(assignment.endDate)}</p>
+                          </div>  
+                       </div>
+                 </li>
                 ))}
               </ul>
             )}

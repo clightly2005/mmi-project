@@ -1,15 +1,7 @@
 "use client";
-
 type Opt = string | number;
-
-export default function SelectField({
-  id,
-  label,
-  value,
-  onChange,
-  options,
-  placeholder = "Select…",
-}: {
+//for modals currently but should mae more of these so that the modals are not as large 
+export default function SelectField({ id, label, value, onChange, options, placeholder = "Select…", }: {
   id: string;
   label: string;
   value: Opt | "";
@@ -22,8 +14,7 @@ export default function SelectField({
       <label htmlFor={id} className="block text-sm font-medium text-neutral-100">
         {label}
       </label>
-      <select id={id} value={value} onChange={(e) => onChange(isNaN(+e.target.value) ? e.target.value : +e.target.value)}
-        required className="mt-2 w-full rounded border bg-white px-3 py-2 text-neutral-900">
+      <select id={id} value={value} onChange={(e) => onChange(isNaN(+e.target.value) ? e.target.value : +e.target.value)} required className="mt-2 w-full rounded border bg-white px-3 py-2 text-neutral-900">
         <option value="" disabled>
           {placeholder}
         </option>

@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
+//this is for the project page so that 10 projects show at a time for now. you can go back and fourth between them or skip to number pages 
 type PaginationProps = {
   page: number;
   totalPages: number;

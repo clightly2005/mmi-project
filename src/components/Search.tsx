@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ProjectWithSkills } from "@/types/projects";
 
-//handles typing and filtering projects by title, and skill
+//handles typing and filtering projects by title, and skill - going to change this so that it filters all projects across pagination divide
 type SearchProps = {
     projects: ProjectWithSkills[];
     onFilter: (filtered: ProjectWithSkills[]) => void;
@@ -9,7 +9,6 @@ type SearchProps = {
 
 export default function Search({projects, onFilter}: SearchProps) {
     const [query, setQuery] = useState('');
-
     useEffect(() => {
         const trimmed = query.trim().toLowerCase();
         const filtered = projects.filter((project) => {

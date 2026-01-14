@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useAssignments } from "./useAssignment";
 
+//hook for getting user availability 
 export function useAvailability(userId?: number) {
   const { assignments } = useAssignments(userId);
 

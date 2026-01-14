@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from '@/lib/prismaClient'
 import { getAuth } from "firebase-admin/auth";
-import { getAdminApp } from "../../../../lib/firebaseAdmin";
+import { getAdminApp } from "@/lib/firebaseAdmin";
 
 //ensures user exists on every page load with their auth etc
 //returns up to date user record from db if skills etc changing

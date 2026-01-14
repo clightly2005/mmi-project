@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import {usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 
+//navigation bar at the top of the screen. this ensures it doesnt show on auth pages and that is is responsive to screen sizes/collapsable on smaller devices
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     
@@ -37,15 +38,9 @@ export default function Navbar() {
         </button>
         <div className={`${ menuOpen ? "flex" : "hidden" } 
             md:flex flex-col md:flex-row items-start md:items-center justify-start md:justify-start md:space-x-6 absolute md:static top-16 left-0 w-full md:w-auto bg-menu md:bg-transparent shadow md:shadow-none p-4 md:p-0`}>
-            <button onClick={() => router.push("/home")} className="block text-white py-1 hover:text-sky-400">
-                Home
-            </button>
-            <button onClick={() => router.push("/projects")} className="block text-white py-1 hover:text-sky-400">
-                Projects
-            </button>
-            <button onClick={handleLogout} className="block text-white py-1 hover:text-sky-400" >
-                Logout 
-            </button>             
+            <button onClick={() => router.push("/home")} className="block text-white py-1 hover:text-sky-400"> Home</button>
+            <button onClick={() => router.push("/projects")} className="block text-white py-1 hover:text-sky-400"> Projects</button>
+            <button onClick={handleLogout} className="block text-white py-1 hover:text-sky-400" > Logout </button>             
             </div>
         </div>
         </nav>

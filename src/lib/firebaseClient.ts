@@ -5,7 +5,7 @@ import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAuth }  from "firebase/auth";
 
 //initalises firebase for client side use
-
+//these vars have been set in .env file for local development and vercel for production
 export function getFirebaseApp(): FirebaseApp {
     if(!getApps().length) {;
     //check app doesn't already exist
